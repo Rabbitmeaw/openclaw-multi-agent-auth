@@ -1,194 +1,194 @@
-# 适用组织类型
+# Applicable Organization Types
 
-## 2.1 个人用户
+## 2.1 Personal Users
 
-### 场景描述
-- 1 人使用多个 Agent
-- 每个 Agent 代表不同角色（工作、学习、生活等）
-- 自己就是 Main Agent 的"所有者"
+### Scenario Description
+- 1 person using multiple Agents
+- Each Agent represents a different role (work, study, life, etc.)
+- Self is the "owner" of Main Agent
 
-### 典型配置
+### Typical Configuration
 ```
 Agents:
-- main: 协调者，拥有全局视图
-- work: 工作助手，处理职业相关任务
-- study: 学习助手，管理学习计划
-- life: 生活助手，处理日常提醒
+- main: Coordinator, has global view
+- work: Work assistant, handles career-related tasks
+- study: Study assistant, manages learning plans
+- life: Life assistant, handles daily reminders
 ```
 
-### 适用性评估
-| 维度 | 评分 | 说明 |
-|------|------|------|
-| 数据隔离 | ⭐⭐⭐⭐⭐ | 自己管理，信任度高 |
-| 协作需求 | ⭐⭐⭐ | 主要是自己协调 |
-| 审计需求 | ⭐⭐ | 个人使用，审计要求低 |
-| 治理复杂度 | ⭐ | 自己就是管理员 |
+### Suitability Assessment
+| Dimension | Rating | Description |
+|-----------|--------|-------------|
+| Data Isolation | ⭐⭐⭐⭐⭐ | Self-managed, high trust |
+| Collaboration Needs | ⭐⭐⭐ | Mainly self-coordination |
+| Audit Needs | ⭐⭐ | Personal use, low audit requirements |
+| Governance Complexity | ⭐ | Self is administrator |
 
-### 建议配置
-- **隔离级别**: 标准（目录隔离 + 命名前缀）
-- **审计频率**: 月度检查
-- **归档策略**: 保留最近 2 季度
+### Recommended Configuration
+- **Isolation Level**: Standard (directory isolation + naming prefix)
+- **Audit Frequency**: Monthly checks
+- **Archive Strategy**: Keep last 2 quarters
 
 ---
 
-## 2.2 小型团队（3-20人）
+## 2.2 Small Teams (3-20 people)
 
-### 场景描述
-- 小团队共享 OpenClaw 网关
-- 每个成员一个 Agent
-- 需要共享知识库和协作空间
-- 轻量级治理即可
+### Scenario Description
+- Small team sharing OpenClaw gateway
+- Each member has one Agent
+- Needs shared knowledge base and collaboration space
+- Lightweight governance is sufficient
 
-### 典型配置
+### Typical Configuration
 ```
 Agents:
-- main: 团队协调者（管理员）
-- member1: 成员1个人Agent
-- member2: 成员2个人Agent
+- main: Team coordinator (admin)
+- member1: Member 1 personal Agent
+- member2: Member 2 personal Agent
 - ...
-- shared: 共享知识库
+- shared: Shared knowledge base
 ```
 
-### 适用性评估
-| 维度 | 评分 | 说明 |
-|------|------|------|
-| 数据隔离 | ⭐⭐⭐⭐ | 成员间数据需隔离 |
-| 协作需求 | ⭐⭐⭐⭐⭐ | 高频协作 |
-| 审计需求 | ⭐⭐⭐ | 需要基本审计 |
-| 治理复杂度 | ⭐⭐⭐ | 需要明确规范 |
+### Suitability Assessment
+| Dimension | Rating | Description |
+|-----------|--------|-------------|
+| Data Isolation | ⭐⭐⭐⭐ | Member data needs isolation |
+| Collaboration Needs | ⭐⭐⭐⭐⭐ | High-frequency collaboration |
+| Audit Needs | ⭐⭐⭐ | Basic audit needed |
+| Governance Complexity | ⭐⭐⭐ | Clear standards required |
 
-### 建议配置
-- **隔离级别**: 标准
-- **审计频率**: 每周自动 + 月度审查
-- **归档策略**: 保留最近 4 季度
-- **必需文档**: GOVERNANCE.md、COMPLIANCE_CHECKLIST.md
+### Recommended Configuration
+- **Isolation Level**: Standard
+- **Audit Frequency**: Weekly auto + monthly review
+- **Archive Strategy**: Keep last 4 quarters
+- **Required Documents**: GOVERNANCE.md, COMPLIANCE_CHECKLIST.md
 
 ---
 
-## 2.3 企业部门（20-100人）
+## 2.3 Enterprise Departments (20-100 people)
 
-### 场景描述
-- 企业部门使用，可能有合规要求
-- 需要完整的审计和治理
-- 可能需要与现有 IT 系统集成
-- 有明确的角色和权限分级
+### Scenario Description
+- Enterprise department use, may have compliance requirements
+- Needs complete audit and governance
+- May need integration with existing IT systems
+- Clear roles and permission levels
 
-### 典型配置
+### Typical Configuration
 ```
 Agents:
-- main: 部门管理员
-- manager: 部门经理助手
-- team-lead1: 组长1助手
-- team-lead2: 组长2助手
-- member1-N: 组员个人Agent
-- shared: 部门知识库
+- main: Department admin
+- manager: Department manager assistant
+- team-lead1: Team lead 1 assistant
+- team-lead2: Team lead 2 assistant
+- member1-N: Team member personal Agents
+- shared: Department knowledge base
 ```
 
-### 适用性评估
-| 维度 | 评分 | 说明 |
-|------|------|------|
-| 数据隔离 | ⭐⭐⭐⭐⭐ | 企业数据严格隔离 |
-| 协作需求 | ⭐⭐⭐⭐⭐ | 复杂协作流程 |
-| 审计需求 | ⭐⭐⭐⭐⭐ | 合规必需 |
-| 治理复杂度 | ⭐⭐⭐⭐⭐ | 需要完整治理体系 |
+### Suitability Assessment
+| Dimension | Rating | Description |
+|-----------|--------|-------------|
+| Data Isolation | ⭐⭐⭐⭐⭐ | Enterprise data strictly isolated |
+| Collaboration Needs | ⭐⭐⭐⭐⭐ | Complex collaboration workflows |
+| Audit Needs | ⭐⭐⭐⭐⭐ | Compliance required |
+| Governance Complexity | ⭐⭐⭐⭐⭐ | Complete governance system needed |
 
-### 建议配置
-- **隔离级别**: 严格
-- **审计频率**: 每周自动 + 月度审查 + 季度报告
-- **归档策略**: 保留最近 8 季度（2年）
-- **必需文档**: 全部治理文档
-- **扩展建议**: 考虑接入企业 SIEM 系统
-
----
-
-## 2.4 AI 服务提供商（多租户）
-
-### 场景描述
-- 向外部客户提供 Agent 服务
-- 每个客户一个或多个 Agent
-- 严格的租户隔离要求
-- 需要计费和使用统计
-
-### 适用性评估
-| 维度 | 评分 | 说明 |
-|------|------|------|
-| 数据隔离 | ⭐⭐⭐⭐⭐ | 租户间绝对隔离 |
-| 协作需求 | ⭐⭐ | 租户间通常不协作 |
-| 审计需求 | ⭐⭐⭐⭐⭐ | 运营必需 |
-| 治理复杂度 | ⭐⭐⭐⭐⭐ | 商业级治理 |
-
-### 适用性：⚠️ 需谨慎
-
-**本方案对此场景的局限性**：
-- 软隔离无法防止恶意租户
-- 缺乏计费和使用统计功能
-- 需要额外的多租户管理功能
-
-**建议**：
-- 仅用于信任客户（如企业内不同部门）
-- 对外部客户建议使用硬隔离方案
-- 需要开发额外的管理后台
+### Recommended Configuration
+- **Isolation Level**: Strict
+- **Audit Frequency**: Weekly auto + monthly review + quarterly report
+- **Archive Strategy**: Keep last 8 quarters (2 years)
+- **Required Documents**: All governance documents
+- **Extension Recommendation**: Consider integrating with enterprise SIEM
 
 ---
 
-## 2.5 不适用场景
+## 2.4 AI Service Providers (Multi-tenant)
 
-以下场景本方案**不推荐**：
+### Scenario Description
+- Providing Agent services to external customers
+- Each customer has one or more Agents
+- Strict tenant isolation requirements
+- Needs billing and usage statistics
 
-### 高安全合规行业
-- 金融、医疗、军工等
-- 需要 SOC2、ISO27001 等认证
-- 监管要求硬权限控制
+### Suitability Assessment
+| Dimension | Rating | Description |
+|-----------|--------|-------------|
+| Data Isolation | ⭐⭐⭐⭐⭐ | Absolute isolation between tenants |
+| Collaboration Needs | ⭐⭐ | Tenants usually don't collaborate |
+| Audit Needs | ⭐⭐⭐⭐⭐ | Operations required |
+| Governance Complexity | ⭐⭐⭐⭐⭐ | Commercial-grade governance |
 
-**替代方案**：
-- 等待 OpenClaw 官方硬 ACL 支持
-- 自行开发权限中间件
-- 使用独立网关实例
+### Suitability: ⚠️ Use with Caution
 
-### 零信任环境
-- 无法假设 Agent 可信任
-- 需要强制隔离，不依赖自律
+**Limitations of this solution for this scenario**:
+- Soft isolation cannot prevent malicious tenants
+- Lacks billing and usage statistics features
+- Requires additional multi-tenant management features
 
-**替代方案**：
-- 操作系统级沙盒
-- 容器化隔离
-- 独立虚拟机
-
-### 大规模部署（>100 Agent）
-- 本方案设计上限约 100 Agent
-- 管理复杂度随 Agent 数线性增长
-
-**替代方案**：
-- 分片部署多个网关
-- 开发中央管理控制台
-- 使用企业级多租户方案
+**Recommendations**:
+- Only for trusted customers (e.g., different departments within enterprise)
+- For external customers, recommend hard isolation solutions
+- Requires development of additional management backend
 
 ---
 
-## 2.6 选择指南
+## 2.5 Not Suitable Scenarios
+
+The following scenarios are **NOT recommended** for this solution:
+
+### High Security Compliance Industries
+- Finance, healthcare, military, etc.
+- Require SOC2, ISO27001, etc. certifications
+- Regulatory requirements for hard permission controls
+
+**Alternative Solutions**:
+- Wait for OpenClaw official hard ACL support
+- Develop permission middleware
+- Use independent gateway instances
+
+### Zero-Trust Environments
+- Cannot assume Agents are trustworthy
+- Require mandatory isolation, not relying on self-discipline
+
+**Alternative Solutions**:
+- OS-level sandboxing
+- Containerized isolation
+- Independent virtual machines
+
+### Large-Scale Deployment (>100 Agents)
+- This solution's design limit is approximately 100 Agents
+- Management complexity grows linearly with Agent count
+
+**Alternative Solutions**:
+- Sharded deployment with multiple gateways
+- Develop central management console
+- Use enterprise multi-tenant solutions
+
+---
+
+## 2.6 Selection Guide
 
 ```
-你是哪类用户？
+What type of user are you?
     │
-    ├─ 个人用户 ──────→ 使用标准配置
+    ├─ Personal User ──────→ Use Standard Config
     │
-    ├─ 小团队（<20人）─→ 使用标准配置 + 完整审计
+    ├─ Small Team (<20)────→ Use Standard Config + Full Audit
     │
-    ├─ 企业部门（<100人）→ 使用严格配置 + 完整治理
+    ├─ Enterprise Dept (<100)→ Use Strict Config + Full Governance
     │
-    ├─ 多租户服务 ────→ ⚠️ 谨慎使用，需额外开发
+    ├─ Multi-tenant Service ─→ ⚠️ Use with caution, requires extra dev
     │
-    └─ 高合规要求 ────→ ❌ 不适用，等待硬 ACL
+    └─ High Compliance ────→ ❌ Not suitable, wait for hard ACL
 ```
 
 ---
 
-## 2.7 组织类型速查表
+## 2.7 Organization Type Quick Reference
 
-| 组织类型 | Agent 数 | 隔离级别 | 审计频率 | 归档保留 | 推荐指数 |
-|----------|----------|----------|----------|----------|----------|
-| 个人 | 2-5 | 标准 | 月度 | 2季度 | ⭐⭐⭐⭐⭐ |
-| 小团队 | 3-20 | 标准 | 周自动+月度 | 4季度 | ⭐⭐⭐⭐⭐ |
-| 企业部门 | 20-100 | 严格 | 周自动+月度+季度 | 8季度 | ⭐⭐⭐⭐ |
-| 多租户 | 不定 | 不适用 | - | - | ⭐⭐ |
-| 高合规 | 不定 | 不适用 | - | - | ❌ |
+| Organization Type | Agent Count | Isolation Level | Audit Frequency | Archive Retention | Recommendation |
+|-------------------|-------------|-----------------|-----------------|-------------------|----------------|
+| Personal | 2-5 | Standard | Monthly | 2 quarters | ⭐⭐⭐⭐⭐ |
+| Small Team | 3-20 | Standard | Weekly auto + Monthly | 4 quarters | ⭐⭐⭐⭐⭐ |
+| Enterprise Dept | 20-100 | Strict | Weekly auto + Monthly + Quarterly | 8 quarters | ⭐⭐⭐⭐ |
+| Multi-tenant | Variable | Not suitable | - | - | ⭐⭐ |
+| High Compliance | Variable | Not suitable | - | - | ❌ |

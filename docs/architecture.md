@@ -1,46 +1,46 @@
-# 整体权限结构
+# Overall Permission Structure
 
-## 3.1 物理目录结构
+## 3.1 Physical Directory Structure
 
 ```
 ~/.openclaw/
 │
-├── workspace/                          # Main Agent 私有区
-│   ├── SOUL.md                         # Agent 核心身份定义
-│   ├── MEMORY.md                       # 长期记忆
-│   ├── AUDIT_LOG.md                    # 审计日志（仅 Main 可访问）
-│   ├── AUDIT_MAINTENANCE_GUIDE.md      # 维护操作手册
-│   └── .cron_snapshot.json             # Cron 任务快照
+├── workspace/                          # Main Agent private area
+│   ├── SOUL.md                         # Agent core identity definition
+│   ├── MEMORY.md                       # Long-term memory
+│   ├── AUDIT_LOG.md                    # Audit log (Main only)
+│   ├── AUDIT_MAINTENANCE_GUIDE.md      # Maintenance operation manual
+│   └── .cron_snapshot.json             # Cron task snapshot
 │
-├── workspace-{label}/                  # 各 Agent 独立私有区
-│   ├── workspace-work/                 # 工作助手私有区
-│   ├── workspace-study/                # 学习助手私有区
+├── workspace-{label}/                  # Independent private area for each Agent
+│   ├── workspace-work/                 # Work assistant private area
+│   ├── workspace-study/                # Study assistant private area
 │   └── ...
 │
-├── agents/                             # Agent 元数据目录
-│   ├── main/                           # Main 元数据
-│   ├── member1/                        # 成员1元数据
+├── agents/                             # Agent metadata directory
+│   ├── main/                           # Main metadata
+│   ├── member1/                        # Member 1 metadata
 │   └── ...
 │
-├── shared/                             # 全局共享区
-│   ├── AGENT_REGISTRY.md               # Agent 注册表
-│   ├── AGENT_CONSTRAINTS.md            # 权限约束定义
-│   ├── GOVERNANCE.md                   # 治理规范
-│   ├── AUDIT_BUFFER.md                 # 审计缓冲（全员可写）
-│   ├── COMPLIANCE_CHECKLIST.md         # 合规检查清单
-│   ├── communication/                  # 通信目录
+├── shared/                             # Global shared area
+│   ├── AGENT_REGISTRY.md               # Agent registry
+│   ├── AGENT_CONSTRAINTS.md            # Permission constraints definition
+│   ├── GOVERNANCE.md                   # Governance standards
+│   ├── AUDIT_BUFFER.md                 # Audit buffer (all can write)
+│   ├── COMPLIANCE_CHECKLIST.md         # Compliance checklist
+│   ├── communication/                  # Communication directory
 │   │   ├── inbox/
 │   │   ├── outbox/
 │   │   └── tasks/
-│   ├── skills/                         # 共享技能
-│   ├── knowledge/                      # 共享知识
-│   └── assets/                         # 公共资源
+│   ├── skills/                         # Shared skills
+│   ├── knowledge/                      # Shared knowledge
+│   └── assets/                         # Public resources
 │
-├── cron/                               # Cron 调度器数据
-│   └── jobs.json                       # 全局任务存储
+├── cron/                               # Cron scheduler data
+│   └── jobs.json                       # Global task storage
 │
-└── archive/                            # 审计归档
-    └── 2026-Q1/                        # 季度归档
+└── archive/                            # Audit archive
+    └── 2026-Q1/                        # Quarterly archive
         ├── audit-logs/
         ├── cron-snapshots/
         └── agent-reports/
@@ -48,139 +48,139 @@
 
 ---
 
-## 3.2 三层隔离模型
+## 3.2 Three-Layer Isolation Model
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      应用层隔离                              │
-│  - Cron 任务命名前缀: {label}-{task-name}                    │
-│  - Agent 通过提示词约束只操作自己的任务                       │
+│                    Application Layer                         │
+│  - Cron task naming prefix: {label}-{task-name}             │
+│  - Agents only operate their own tasks via prompt constraints│
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│                      共享层                                  │
-│  - shared/: 全局配置、注册表、通信空间                        │
-│  - cron/jobs.json: 全局任务存储                              │
+│                    Shared Layer                              │
+│  - shared/: Global config, registry, communication space    │
+│  - cron/jobs.json: Global task storage                      │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│                      私有层（物理隔离）                       │
-│  - workspace/: Main 私有                                    │
-│  - workspace-{label}/: 各 Agent 私有                        │
-│  - agents/{label}/: 各 Agent 元数据                          │
+│                    Private Layer (Physical Isolation)        │
+│  - workspace/: Main private                                 │
+│  - workspace-{label}/: Each Agent private                   │
+│  - agents/{label}/: Each Agent metadata                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 3.3 权限矩阵
+## 3.3 Permission Matrix
 
-### 3.3.1 文件系统权限
+### 3.3.1 Filesystem Permissions
 
-| 区域 | Main Agent | Worker Agent |
+| Area | Main Agent | Worker Agent |
 |------|------------|--------------|
-| `~/.openclaw/workspace/` | ✅ 完全读写 | ❌ 禁止访问 |
-| `~/.openclaw/workspace-{label}/` | ⚠️ 技术可访问，规则禁止 | ✅ 仅自己的 workspace |
-| `~/.openclaw/agents/{label}/` | ⚠️ 技术可访问，规则禁止 | ✅ 仅自己的 agents 目录 |
-| `~/.openclaw/shared/` | ✅ 读写（维护者） | ✅ 只读（部分可写） |
-| `~/.openclaw/cron/jobs.json` | ✅ 全局管理 | ✅ 自治管理（带前缀限制） |
-| `~/.openclaw/archive/` | ✅ 读写 | ❌ 禁止访问 |
+| `~/.openclaw/workspace/` | ✅ Full R/W | ❌ Prohibited |
+| `~/.openclaw/workspace-{label}/` | ⚠️ Technically accessible, rule-prohibited | ✅ Own workspace only |
+| `~/.openclaw/agents/{label}/` | ⚠️ Technically accessible, rule-prohibited | ✅ Own agents directory only |
+| `~/.openclaw/shared/` | ✅ R/W (maintainer) | ✅ Read-only (partial write) |
+| `~/.openclaw/cron/jobs.json` | ✅ Global management | ✅ Self-governance (prefix-limited) |
+| `~/.openclaw/archive/` | ✅ R/W | ❌ Prohibited |
 
-### 3.3.2 Cron 权限
+### 3.3.2 Cron Permissions
 
-| 操作 | Main Agent | Worker Agent |
+| Operation | Main Agent | Worker Agent |
+|-----------|------------|--------------|
+| Create Task | ✅ Any name | ✅ Must have `{label}-` prefix |
+| Modify Task | ✅ Any task | ✅ Only own prefix tasks |
+| Delete Task | ✅ Any task | ✅ Only own prefix tasks |
+| View Tasks | ✅ All | ✅ All (for self-check) |
+| Operate Others' Tasks | ✅ Can do (when arbitrating) | ❌ Strictly prohibited |
+
+### 3.3.3 Audit Permissions
+
+| File | Main Agent | Worker Agent |
 |------|------------|--------------|
-| 创建任务 | ✅ 任意名称 | ✅ 必须带 `{label}-` 前缀 |
-| 修改任务 | ✅ 任意任务 | ✅ 仅自己前缀的任务 |
-| 删除任务 | ✅ 任意任务 | ✅ 仅自己前缀的任务 |
-| 查看任务 | ✅ 全部 | ✅ 全部（用于自检） |
-| 操作他人任务 | ✅ 可以（仲裁时） | ❌ 严禁 |
-
-### 3.3.3 审计权限
-
-| 文件 | Main Agent | Worker Agent |
-|------|------------|--------------|
-| `workspace/AUDIT_LOG.md` | ✅ 读写 | ❌ 禁止 |
-| `shared/AUDIT_BUFFER.md` | ✅ 读写 | ✅ 追加 |
-| `archive/` | ✅ 读写 | ❌ 禁止 |
+| `workspace/AUDIT_LOG.md` | ✅ R/W | ❌ Prohibited |
+| `shared/AUDIT_BUFFER.md` | ✅ R/W | ✅ Append |
+| `archive/` | ✅ R/W | ❌ Prohibited |
 
 ---
 
-## 3.4 Main Agent 的特殊地位
+## 3.4 Main Agent's Special Status
 
-### 技术能力 vs 规则权限
+### Technical Capability vs Rule Permission
 
 ```
 ┌─────────────────────────────────────────┐
-│  技术层面                                │
-│  - 文件系统权限允许 Main 访问任何目录     │
-│  - 工具调用没有硬 ACL 限制               │
+│  Technical Layer                         │
+│  - Filesystem allows Main to access any │
+│  - Tool calls have no hard ACL limits   │
 └─────────────────────────────────────────┘
                       ↓
 ┌─────────────────────────────────────────┐
-│  规则层面（提示词约束）                   │
-│  - Main 尊重物理隔离，不随意访问          │
-│  - Worker 只操作自己前缀的 cron 任务     │
-│  - 所有 Agent 通过命名规范自我约束       │
+│  Rule Layer (Prompt Constraints)         │
+│  - Main respects physical isolation      │
+│  - Worker only operates own cron tasks   │
+│  - All Agents self-constrain via naming  │
 └─────────────────────────────────────────┘
 ```
 
-### Main Agent 访问其他 Agent 私有区的条件
+### Conditions for Main Agent to Access Other Agents' Private Areas
 
-仅在以下情况：
-1. **明确授权**：对方 Agent 或用户明确要求
-2. **系统维护**：清理、备份、故障排查
-3. **调试支持**：协助解决其他 Agent 的问题
-4. **紧急干预**：系统级安全问题
+Only in the following cases:
+1. **Explicit Authorization**: Other Agent or user explicitly requests
+2. **System Maintenance**: Cleanup, backup, troubleshooting
+3. **Debug Support**: Assisting with other Agent issues
+4. **Emergency Intervention**: System-level security issues
 
-**默认禁止**：日常任务中主动读取/修改其他 Agent 的私有文件
-
----
-
-## 3.5 命名空间规范
-
-### Cron 任务命名
-
-```
-格式: {label}-{任务名}
-
-示例:
-  work-日报提醒
-  work-周报生成
-  study-学习计划
-  life-喝水提醒
-```
-
-### Label 分配规则
-
-| Agent 类型 | Label 示例 | 说明 |
-|------------|-----------|------|
-| Main | `main` | 固定，协调者 |
-| 个人角色 | `work`, `study`, `life` | 按角色命名 |
-| 团队成员 | `zhangsan`, `lisi` | 按姓名拼音 |
-| 企业部门 | `sales`, `hr`, `dev` | 按部门命名 |
-
-### 命名冲突处理
-
-- 新 Agent 注册时检查前缀唯一性
-- 发现冲突时 Main Agent 介入协调
-- 后注册者通常需要更换 label
+**Default Prohibition**: Proactively reading/modifying other Agents' private files during daily tasks
 
 ---
 
-## 3.6 通信机制
+## 3.5 Namespace Standards
 
-### 3.6.1 直接消息
+### Cron Task Naming
+
+```
+Format: {label}-{task-name}
+
+Examples:
+  work-daily-report
+  work-weekly-report
+  study-learning-plan
+  life-water-reminder
+```
+
+### Label Assignment Rules
+
+| Agent Type | Label Examples | Description |
+|------------|----------------|-------------|
+| Main | `main` | Fixed, coordinator |
+| Personal Roles | `work`, `study`, `life` | Named by role |
+| Team Members | `zhangsan`, `lisi` | Named by pinyin name |
+| Enterprise Depts | `sales`, `hr`, `dev` | Named by department |
+
+### Naming Conflict Resolution
+
+- Check prefix uniqueness when registering new Agent
+- Main Agent intervenes to coordinate when conflicts are found
+- Later registrants usually need to change labels
+
+---
+
+## 3.6 Communication Mechanisms
+
+### 3.6.1 Direct Messages
 
 ```
 ┌─────────┐      sessions_send       ┌─────────┐
-│ Agent A │ ────────────────────────▶ │ Agent B │
-└─────────┘                         └─────────┘
+│ Agent A │ ────────────────────────▶│ Agent B │
+└─────────┘                        └─────────┘
 ```
 
-适用场景：紧急通知、即时协作
+Use cases: Urgent notifications, instant collaboration
 
-### 3.6.2 共享文件
+### 3.6.2 Shared Files
 
 ```
 ┌─────────┐    write to shared/    ┌─────────┐
@@ -189,83 +189,83 @@
 └─────────┘    read from shared/   └─────────┘
 ```
 
-适用场景：非即时通信、文档共享
+Use cases: Non-instant communication, document sharing
 
-### 3.6.3 Cron 任务协调
+### 3.6.3 Cron Task Coordination
 
 ```
-- 各 Agent 独立创建任务
-- Main 定期检查全局状态
-- 冲突时 Main 介入仲裁
+- Each Agent independently creates tasks
+- Main periodically checks global status
+- Main intervenes to arbitrate when conflicts occur
 ```
 
 ---
 
-## 3.7 审计架构
+## 3.7 Audit Architecture
 
-### 数据流向
+### Data Flow
 
 ```
-Worker Agent 执行操作
+Worker Agent executes operation
        ↓
-写入 shared/AUDIT_BUFFER.md
+Writes to shared/AUDIT_BUFFER.md
        ↓
-       │ 每周日 9:00
+       │ Every Sunday 9:00
        ↓
-Main Agent 消费缓冲
+Main Agent consumes buffer
        ↓
-汇总到 workspace/AUDIT_LOG.md
+Consolidates to workspace/AUDIT_LOG.md
        ↓
-季度归档到 archive/YYYY-Qx/
+Quarterly archive to archive/YYYY-Qx/
 ```
 
-### 审计记录类型
+### Audit Record Types
 
-| 类型 | 记录者 | 位置 | 用途 |
-|------|--------|------|------|
-| 操作上报 | Worker | AUDIT_BUFFER.md | 实时记录 |
-| 缓冲汇总 | Main | AUDIT_LOG.md | 集中审计 |
-| 巡检发现 | Main | AUDIT_LOG.md | 变更检测 |
-| 季度归档 | Main | archive/ | 历史留存 |
+| Type | Recorder | Location | Purpose |
+|------|----------|----------|---------|
+| Operation Report | Worker | AUDIT_BUFFER.md | Real-time recording |
+| Buffer Consolidation | Main | AUDIT_LOG.md | Centralized audit |
+| Patrol Discovery | Main | AUDIT_LOG.md | Change detection |
+| Quarterly Archive | Main | archive/ | Historical retention |
 
 ---
 
-## 3.8 关键设计决策
+## 3.8 Key Design Decisions
 
-### 决策 1：软隔离 vs 硬隔离
+### Decision 1: Soft Isolation vs Hard Isolation
 
-**选择**：软隔离（提示词约束）
+**Choice**: Soft isolation (prompt constraints)
 
-**理由**：
-- 在缺乏硬 ACL 的 OpenClaw 环境中可行
-- 实施成本低，无需开发
-- 适用于信任环境
+**Rationale**:
+- Feasible in OpenClaw environments lacking hard ACL
+- Low implementation cost, no development required
+- Suitable for trusted environments
 
-**权衡**：
-- 无法阻止恶意 Agent
-- 依赖 Agent 自律
+**Trade-offs**:
+- Cannot prevent malicious Agents
+- Relies on Agent self-discipline
 
-### 决策 2：集中式 vs 分布式 Cron
+### Decision 2: Centralized vs Distributed Cron
 
-**选择**：分布式自治 + Main 监督
+**Choice**: Distributed autonomy + Main supervision
 
-**理由**：
-- 消除 Main 单点瓶颈
-- 提升响应速度
-- 各 Agent 可独立管理任务
+**Rationale**:
+- Eliminates Main single-point bottleneck
+- Improves response speed
+- Each Agent can independently manage tasks
 
-**权衡**：
-- 需要命名空间管理
-- 冲突时需要仲裁
+**Trade-offs**:
+- Requires namespace management
+- Arbitration needed when conflicts occur
 
-### 决策 3：审计日志位置
+### Decision 3: Audit Log Location
 
-**选择**：Main workspace（Main 私有）
+**Choice**: Main workspace (Main private)
 
-**理由**：
-- 防止 Worker 篡改审计记录
-- Main 负责审计完整性
+**Rationale**:
+- Prevents Workers from tampering with audit records
+- Main responsible for audit integrity
 
-**权衡**：
-- Worker 无法直接查看审计状态
-- 需要通过 Main 查询
+**Trade-offs**:
+- Workers cannot directly view audit status
+- Need to query through Main

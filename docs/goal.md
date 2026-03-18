@@ -1,112 +1,113 @@
-# 设置目标
+# Design Goals
 
-## 1.1 背景
+## 1.1 Background
 
-在 OpenClaw 单网关多 Agent 环境中，面临以下挑战：
+In an OpenClaw single-gateway multi-Agent environment, the following challenges are faced:
 
-### 数据隔离挑战
-- 多个 Agent 共享同一文件系统，如何防止数据互相访问？
-- 个人记忆、配置等敏感信息需要保护
-- 企业场景下员工数据需要隐私边界
+### Data Isolation Challenges
+- Multiple Agents share the same filesystem; how to prevent mutual data access?
+- Personal memories, configurations, and other sensitive information need protection
+- In enterprise scenarios, employee data requires privacy boundaries
 
-### 协作挑战
-- 某些场景需要跨 Agent 共享知识
-- 需要统一的调度协调机制
-- 冲突时如何仲裁？
+### Collaboration Challenges
+- Some scenarios require cross-Agent knowledge sharing
+- A unified scheduling and coordination mechanism is needed
+- How to arbitrate when conflicts occur?
 
-### 治理挑战
-- 操作如何追溯？
-- 违规如何发现和处理？
-- 新 Agent 如何接入？
-
----
-
-## 1.2 核心目标
-
-| 目标 | 说明 | 实现方式 |
-|------|------|----------|
-| **物理隔离** | 各 Agent 有独立的文件系统空间 | 独立的 workspace 目录 |
-| **数据保护** | Agent 的私有数据不被其他 Agent 访问 | 目录权限 + 提示词约束 |
-| **协作能力** | 支持必要的跨 Agent 通信和共享 | shared/ 共享区 |
-| **Cron 自治** | 各 Agent 自主管理定时任务 | 命名前缀软隔离 |
-| **监督仲裁** | Main Agent 保留全局监督和冲突仲裁能力 | 提示词约束 + 注册表 |
-| **审计追溯** | 关键操作可记录、可追溯 | 审计日志系统 |
+### Governance Challenges
+- How to trace operations?
+- How to discover and handle violations?
+- How to onboard new Agents?
 
 ---
 
-## 1.3 方案演进
+## 1.2 Core Objectives
+
+| Objective | Description | Implementation |
+|-----------|-------------|----------------|
+| **Physical Isolation** | Each Agent has independent filesystem space | Independent workspace directories |
+| **Data Protection** | Private data of Agents not accessible by other Agents | Directory permissions + prompt constraints |
+| **Collaboration Capability** | Support necessary cross-Agent communication and sharing | shared/ directory |
+| **Cron Autonomy** | Each Agent independently manages scheduled tasks | Namespace prefix soft isolation |
+| **Supervision & Arbitration** | Main Agent retains global supervision and conflict arbitration | Prompt constraints + registry |
+| **Audit Traceability** | Critical operations can be recorded and traced | Audit logging system |
+
+---
+
+## 1.3 Solution Evolution
 
 ```
-集中式调度（旧）                分布式自治（新）
-┌─────────┐                   ┌─────────┐
-│ Worker  │──请求──┐         │ Worker  │──直接创建
-└─────────┘        │         └─────────┘
-                   ▼              │
-┌─────────┐    ┌──────┐          │
-│  Main   │◄───│ Inbox│          │
-└────┬────┘    └──────┘          │
-     │                           ▼
-     ▼                      ┌─────────┐
-┌─────────┐                 │ Cron    │
-│ 创建任务 │                 │ 调度器  │
-└─────────┘                 └─────────┘
+Centralized Scheduling (Old)         Distributed Autonomy (New)
+┌─────────┐                         ┌─────────┐
+│ Worker  │──Request──┐            │ Worker  │──Direct Create
+└─────────┘           │            └─────────┘
+                      ▼                 │
+┌─────────┐    ┌──────────┐            │
+│  Main   │◄───│  Inbox   │            │
+└────┬────┘    └──────────┘            │
+     │                                  ▼
+     ▼                            ┌─────────┐
+┌─────────┐                       │  Cron   │
+│ Create  │                       │Scheduler│
+│  Task   │                       └─────────┘
+└─────────┘
 ```
 
-**演进原因**：
-- 集中式存在单点瓶颈，Worker 需等待 Main 响应
-- 分布式提升响应速度，各 Agent 可自治管理
-- 通过命名空间隔离替代硬权限限制
+**Evolution Rationale**:
+- Centralized had single-point bottlenecks; Workers waited for Main responses
+- Distributed improves response speed; Agents can self-govern
+- Namespace isolation replaces hard permission restrictions
 
 ---
 
-## 1.4 设计原则
+## 1.4 Design Principles
 
-### 原则 1：最小权限
-每个 Agent 只能访问：
-- 自己的 workspace
-- 共享区（只读或受限读写）
-- 自己的 Cron 任务（通过前缀限制）
+### Principle 1: Least Privilege
+Each Agent can only access:
+- Its own workspace
+- Shared areas (read-only or restricted read-write)
+- Its own Cron tasks (limited by prefix)
 
-### 原则 2：默认隔离
-- 默认情况下各 Agent 数据互不可见
-- 共享需显式放入 shared/ 目录
-- 跨 Agent 访问需授权
+### Principle 2: Default Isolation
+- By default, Agent data is invisible to each other
+- Sharing requires explicit placement in shared/ directory
+- Cross-Agent access requires authorization
 
-### 原则 3：审计可追溯
-- 关键操作（Cron 变更、跨区访问）需记录
-- 审计日志集中管理，定期归档
-- 冲突时可追溯责任
+### Principle 3: Audit Traceability
+- Critical operations (Cron changes, cross-area access) must be recorded
+- Audit logs are centrally managed and regularly archived
+- Accountability is traceable when conflicts occur
 
-### 原则 4：轻量实现
-- 不引入额外系统或数据库
-- 纯文件系统方案
-- 依赖提示词约束而非硬 ACL
-
----
-
-## 1.5 核心假设
-
-本方案基于以下假设：
-
-1. **Agent 可信任**：Agent 会遵守提示词约束，不会恶意绕过
-2. **Main Agent 可靠**：Main Agent 能正确执行监督和仲裁职责
-3. **用户理解限制**：用户理解这是"软隔离"而非"硬安全"
-
-**不适用场景**：
-- 零信任环境（需硬 ACL）
-- 恶意 Agent 场景
-- 高安全合规要求（如金融、军工）
+### Principle 4: Lightweight Implementation
+- No additional systems or databases introduced
+- Pure filesystem solution
+- Relies on prompt constraints rather than hard ACL
 
 ---
 
-## 1.6 成功标准
+## 1.5 Core Assumptions
 
-方案成功的衡量标准：
+This solution is based on the following assumptions:
 
-| 标准 | 衡量方式 |
-|------|----------|
-| 数据隔离有效 | 无意外数据泄露事件 |
-| 协作顺畅 | 跨 Agent 任务协调时间 < 5 分钟 |
-| 审计完整 | 关键操作记录率 > 95% |
-| 冲突可解 | 命名冲突平均解决时间 < 1 小时 |
-| 资源可控 | 审计日志年增量 < 10MB |
+1. **Agents are trustworthy**: Agents will comply with prompt constraints and won't maliciously bypass
+2. **Main Agent is reliable**: Main Agent correctly performs supervision and arbitration duties
+3. **User understands limitations**: User understands this is "soft isolation" not "hard security"
+
+**Not Suitable For**:
+- Zero-trust environments (require hard ACL)
+- Malicious Agent scenarios
+- High-security compliance requirements (e.g., finance, military)
+
+---
+
+## 1.6 Success Criteria
+
+Success metrics for the solution:
+
+| Criteria | Measurement |
+|----------|-------------|
+| Effective Data Isolation | No accidental data leakage incidents |
+| Smooth Collaboration | Cross-Agent task coordination time < 5 minutes |
+| Complete Audit | Critical operation recording rate > 95% |
+| Resolvable Conflicts | Average namespace conflict resolution time < 1 hour |
+| Controllable Resources | Audit log annual increment < 10MB |
