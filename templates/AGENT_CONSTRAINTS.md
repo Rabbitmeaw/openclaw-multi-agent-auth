@@ -1,127 +1,127 @@
-# Agent 权限约束
+# Agent Permission Constraints
 
-**适用对象**: 所有 Worker Agent
-**生效日期**: 2026-03-18
-
----
-
-## 核心规则
-
-### 1. Cron 任务自治
-
-#### ✅ 允许的操作
-- 创建定时任务（必须带 `{label}-` 前缀）
-- 修改自己的任务（以 `{label}-` 开头）
-- 删除自己的任务
-- 查看所有任务（用于自检）
-
-#### ❌ 禁止的操作
-- 创建无前缀的任务
-- 使用他人的前缀
-- 修改/删除他人的任务
-
-#### 命名规范
-```
-格式: {label}-{任务名}
-示例: {label1}-早报, {label2}-视频发布
-
-如何确定你的 label：
-读取 ~/.openclaw/shared/AGENT_REGISTRY.md
-```
-
-### 2. 审计上报（强制）
-
-执行以下操作时，**必须**追加到 `~/.openclaw/shared/AUDIT_BUFFER.md`：
-
-| 操作 | 格式 |
-|------|------|
-| 创建任务 | `[YYYY-MM-DD HH:MM] [{label}] [CRON_CREATE] 任务名: xxx, schedule: yyy` |
-| 修改任务 | `[YYYY-MM-DD HH:MM] [{label}] [CRON_UPDATE] 任务名: xxx, 变更: yyy` |
-| 删除任务 | `[YYYY-MM-DD HH:MM] [{label}] [CRON_DELETE] 任务名: xxx` |
-
-### 3. 文件系统边界
-
-#### ✅ 可访问
-- `workspace-{label}/` — 你的私有区
-- `shared/` — 共享区（按子目录权限）
-- `shared/AUDIT_BUFFER.md` — 审计上报
-
-#### ❌ 禁止访问
-- `workspace/` — Main Agent 私有区
-- 其他 Agent 的 workspace
+**Applies To**: All Worker Agents
+**Effective Date**: 2026-03-18
 
 ---
 
-## 执行流程
+## Core Rules
 
-### 创建 Cron 任务的正确步骤
+### 1. Cron Task Autonomy
+
+#### ✅ Allowed Operations
+- Create scheduled tasks (must have `{label}-` prefix)
+- Modify own tasks (starting with `{label}-`)
+- Delete own tasks
+- View all tasks (for self-check)
+
+#### ❌ Prohibited Operations
+- Create tasks without prefix
+- Use others' prefixes
+- Modify/delete others' tasks
+
+#### Naming Standards
+```
+Format: {label}-{task-name}
+Examples: {label1}-morning-report, {label2}-video-publish
+
+How to determine your label:
+Read ~/.openclaw/shared/AGENT_REGISTRY.md
+```
+
+### 2. Audit Reporting (Mandatory)
+
+When executing the following operations, **must** append to `~/.openclaw/shared/AUDIT_BUFFER.md`:
+
+| Operation | Format |
+|-----------|--------|
+| Create Task | `[YYYY-MM-DD HH:MM] [{label}] [CRON_CREATE] Task: xxx, schedule: yyy` |
+| Modify Task | `[YYYY-MM-DD HH:MM] [{label}] [CRON_UPDATE] Task: xxx, Change: yyy` |
+| Delete Task | `[YYYY-MM-DD HH:MM] [{label}] [CRON_DELETE] Task: xxx` |
+
+### 3. Filesystem Boundaries
+
+#### ✅ Accessible
+- `workspace-{label}/` — Your private area
+- `shared/` — Shared area (by subdirectory permissions)
+- `shared/AUDIT_BUFFER.md` — Audit reporting
+
+#### ❌ Prohibited Access
+- `workspace/` — Main Agent private area
+- Other Agents' workspaces
+
+---
+
+## Execution Flow
+
+### Correct Steps for Creating Cron Tasks
 
 ```
-1. 确认身份
-   → 读取 ~/.openclaw/shared/AGENT_REGISTRY.md
-   → 确定你的 label
+1. Confirm Identity
+   → Read ~/.openclaw/shared/AGENT_REGISTRY.md
+   → Determine your label
 
-2. 创建任务
-   → cron add --name "{label}-任务名" ...
-   → 确保名称包含 {label}- 前缀
+2. Create Task
+   → cron add --name "{label}-task-name" ...
+   → Ensure name contains {label}- prefix
 
-3. 记录审计
-   → 追加到 ~/.openclaw/shared/AUDIT_BUFFER.md
-   → 格式：[时间] [label] [CRON_CREATE] 详情
+3. Record Audit
+   → Append to ~/.openclaw/shared/AUDIT_BUFFER.md
+   → Format: [Time] [label] [CRON_CREATE] Details
 
-4. 验证
+4. Verify
    → cron list | grep "{label}-"
-   → 确认任务创建成功
+   → Confirm task creation successful
 ```
 
-### 修改/删除任务的正确步骤
+### Correct Steps for Modifying/Deleting Tasks
 
 ```
-1. 列出你的任务
+1. List Your Tasks
    → cron list | grep "{label}-"
 
-2. 确认目标任务是你要操作的
-   → 检查任务名是否以 {label}- 开头
+2. Confirm Target Task is Yours
+   → Check if task name starts with {label}-
 
-3. 执行修改/删除
+3. Execute Modify/Delete
    → cron update --jobId xxx ...
-   → 或 cron remove --jobId xxx
+   → Or cron remove --jobId xxx
 
-4. 记录审计
-   → 追加到 AUDIT_BUFFER.md
+4. Record Audit
+   → Append to AUDIT_BUFFER.md
 ```
 
 ---
 
-## 冲突处理
+## Conflict Handling
 
-如果发现以下情况，**立即停止操作并联系 Main Agent**：
-- 你想创建的任务名已被他人使用
-- 你不确定某个任务是否属于你
-- 你误删了他人的任务
-- 你发现系统异常
-
----
-
-## 与 Main Agent 的关系
-
-| 场景 | 你的做法 | Main Agent 的角色 |
-|------|----------|------------------|
-| 日常 Cron 管理 | 自主创建/修改/删除 | 不干预 |
-| 命名冲突 | 停止操作，联系 Main | 仲裁协调 |
-| 需要帮助 | 通过 shared/communication/ 或飞书联系 | 提供支持 |
-| 系统维护 | 配合 Main 的要求 | 统一调度 |
+If you discover the following situations, **immediately stop operations and contact Main Agent**:
+- Task name you want to create is already used by others
+- You're unsure if a task belongs to you
+- You accidentally deleted others' tasks
+- You discover system anomalies
 
 ---
 
-## 关键文件
+## Relationship with Main Agent
 
-| 文件 | 路径 | 用途 |
-|------|------|------|
-| 本文件 | `~/.openclaw/shared/AGENT_CONSTRAINTS.md` | 权限约束 |
-| 注册表 | `~/.openclaw/shared/AGENT_REGISTRY.md` | 确认身份 |
-| 审计缓冲 | `~/.openclaw/shared/AUDIT_BUFFER.md` | 上报操作 |
-| 审计日志 | `~/.openclaw/workspace/AUDIT_LOG.md` | 正式审计记录（Main only） |
-| 治理规范 | `~/.openclaw/shared/GOVERNANCE.md` | 企业准则 |
-| 维护指南 | `~/.openclaw/workspace/AUDIT_MAINTENANCE_GUIDE.md` | Main Agent 维护手册 |
-| 季度归档 | `~/.openclaw/archive/YYYY-Qx/` | 历史审计数据归档 |
+| Scenario | Your Action | Main Agent's Role |
+|----------|-------------|-------------------|
+| Daily Cron Management | Self-create/modify/delete | No intervention |
+| Naming Conflict | Stop operation, contact Main | Arbitration coordination |
+| Need Help | Contact via shared/communication/ or Feishu | Provide support |
+| System Maintenance | Cooperate with Main's requirements | Unified scheduling |
+
+---
+
+## Key Files
+
+| File | Path | Purpose |
+|------|------|---------|
+| This File | `~/.openclaw/shared/AGENT_CONSTRAINTS.md` | Permission constraints |
+| Registry | `~/.openclaw/shared/AGENT_REGISTRY.md` | Identity confirmation |
+| Audit Buffer | `~/.openclaw/shared/AUDIT_BUFFER.md` | Operation reporting |
+| Audit Log | `~/.openclaw/workspace/AUDIT_LOG.md` | Formal audit record (Main only) |
+| Governance | `~/.openclaw/shared/GOVERNANCE.md` | Enterprise standards |
+| Maintenance Guide | `~/.openclaw/workspace/AUDIT_MAINTENANCE_GUIDE.md` | Main Agent maintenance manual |
+| Quarterly Archive | `~/.openclaw/archive/YYYY-Qx/` | Historical audit data archive |

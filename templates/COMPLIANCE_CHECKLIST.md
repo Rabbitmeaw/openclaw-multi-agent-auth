@@ -1,115 +1,115 @@
-# 合规检查清单
+# Compliance Checklist
 
-**用途**: 记录 Main Agent 的自动化审计执行情况
-**执行方式**: 自动化（每周日 9:00，通过 Cron 任务 `main-审计维护`）
-**人工审查**: 每季度一次（检查自动化执行效果）
-**记录位置**: 本文件记录异常，正常执行记录见 `~/.openclaw/workspace/AUDIT_LOG.md`
+**Purpose**: Record Main Agent's automated audit execution
+**Execution Method**: Automated (every Sunday 9:00, via Cron task `main-audit-maintenance`)
+**Manual Review**: Quarterly (check automated execution effectiveness)
+**Record Location**: This file records exceptions, normal execution records see `~/.openclaw/workspace/AUDIT_LOG.md`
 
 ---
 
-## 检查项模板
+## Check Item Template
 
-每次检查时复制以下模板，填写日期和结果：
+Copy the following template each check, fill in date and results:
 
 ```markdown
-## 检查记录: YYYY-MM-DD
+## Check Record: YYYY-MM-DD
 
-**执行人**: Main Agent
-**检查结果**: ✅ 通过 / ⚠️ 发现 N 个问题 / ❌ 需要处理
+**Executor**: Main Agent
+**Check Result**: ✅ Passed / ⚠️ Found N issues / ❌ Needs handling
 
-### 检查项
-- [ ] 审计日志完整性检查
-- [ ] 无前缀任务扫描
-- [ ] 异常访问模式检查
-- [ ] 日志归档（季度切换时）
+### Check Items
+- [ ] Audit log integrity check
+- [ ] Prefixless task scan
+- [ ] Abnormal access pattern check
+- [ ] Log archive (when quarter switches)
 
-### 发现问题
-| 序号 | 问题描述 | 严重程度 | 处理措施 | 状态 |
-|------|----------|----------|----------|------|
+### Issues Found
+| No. | Issue Description | Severity | Handling Measure | Status |
+|-----|-------------------|----------|------------------|--------|
 | 1 | - | - | - | - |
 
-### 备注
+### Notes
 -
 ```
 
 ---
 
-## 检查方法
+## Check Methods
 
-### 1. 审计日志完整性
+### 1. Audit Log Integrity
 ```bash
-# 检查日志文件是否存在且格式正确
+# Check if log file exists and format is correct
 cat ~/.openclaw/workspace/AUDIT_LOG.md
 
-# 确认本季度有记录（如果是季度初，确认上季度已归档）
+# Confirm this quarter has records (if quarter start, confirm last quarter archived)
 ```
 
-### 2. 无前缀任务扫描
+### 2. Prefixless Task Scan
 ```bash
-# 列出所有任务
+# List all tasks
 openclaw cron list
 
-# 检查是否有任务名不以 "{label}-" 开头
-# 有效前缀列表:
+# Check if any task names don't start with "{label}-"
+# Valid prefix list:
 # main-, {label1}-, {label2}-, ...
 ```
 
-### 3. 异常访问模式
+### 3. Abnormal Access Patterns
 ```bash
-# 检查审计日志中是否有:
-# - 频繁的跨 Agent 访问
-# - 未记录原因的访问
-# - 同一 Agent 多次违规
+# Check audit log for:
+# - Frequent cross-Agent access
+# - Unrecorded access reasons
+# - Same Agent multiple violations
 ```
 
-### 4. 日志归档（季度切换时执行）
+### 4. Log Archive (Execute when quarter switches)
 ```bash
-# 每季度第一天执行:
-# 1. 创建季度归档目录结构（如不存在）
+# First day of each quarter:
+# 1. Create quarterly archive directory structure (if not exists)
 # mkdir -p ~/.openclaw/archive/YYYY-Qx/{audit-logs,cron-snapshots,agent-reports}
 #
-# 示例: ~/.openclaw/archive/2026-Q1/
-#        ├── audit-logs/          # 审计日志归档
-#        ├── cron-snapshots/      # Cron 任务快照
-#        └── agent-reports/       # Agent 活动报告
+# Example: ~/.openclaw/archive/2026-Q1/
+#        ├── audit-logs/          # Audit log archive
+#        ├── cron-snapshots/      # Cron task snapshots
+#        └── agent-reports/       # Agent activity reports
 
-# 2. 将本季度数据归档
+# 2. Archive this quarter's data
 # cp ~/.openclaw/workspace/AUDIT_LOG.md \
 #    ~/.openclaw/archive/YYYY-Qx/audit-logs/
 # cp ~/.openclaw/workspace/.cron_snapshot.json \
 #    ~/.openclaw/archive/YYYY-Qx/cron-snapshots/
 
-# 3. 在 AUDIT_LOG.md 中创建新区块，开始新季度记录
+# 3. Create new block in AUDIT_LOG.md, start new quarter recording
 ```
 
 ---
 
-## 历史检查记录
+## Historical Check Records
 
-### 检查记录: YYYY-MM-DD (初始化)
+### Check Record: YYYY-MM-DD (Initialization)
 
-**执行人**: Main Agent
-**检查结果**: ✅ 通过
+**Executor**: Main Agent
+**Check Result**: ✅ Passed
 
-### 检查项
-- [x] 审计日志完整性检查
-- [x] 无前缀任务扫描
-- [x] 异常访问模式检查
-- [ ] 日志归档（季度切换时）- 非季度切换，跳过
+### Check Items
+- [x] Audit log integrity check
+- [x] Prefixless task scan
+- [x] Abnormal access pattern check
+- [ ] Log archive (when quarter switches) - Not quarter switch, skip
 
-### 发现问题
-无
+### Issues Found
+None
 
-### 备注
-- 初始检查，审计日志系统刚刚建立
-- 所有 Cron 任务已按规范重命名
-- 未发现无前缀任务
+### Notes
+- Initial check, audit logging system just established
+- All Cron tasks renamed per standards
+- No prefixless tasks found
 
 ---
 
-## 季度归档记录
+## Quarterly Archive Records
 
-| 季度 | 归档目录 | 内容 | 状态 |
-|------|----------|------|------|
+| Quarter | Archive Directory | Content | Status |
+|---------|-------------------|---------|--------|
 | - | - | - | - |
 

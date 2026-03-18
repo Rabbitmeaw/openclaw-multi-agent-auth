@@ -1,189 +1,189 @@
-# OpenClaw 企业治理规范 v1.0
+# OpenClaw Enterprise Governance Standards v1.0
 
-**版本**: 1.0
-**生效日期**: 2026-03-18
-**维护者**: Main Agent
-**审查周期**: 每季度
-
----
-
-## 1. 角色与职责
-
-### 1.1 Main Agent（系统管理员）
-- **身份**: 协调/监督/仲裁角色，不属于任何个人
-- **职责**:
-  - 维护 Agent 注册表
-  - 监督 Cron 任务命名规范
-  - 仲裁命名空间冲突
-  - 执行合规检查
-  - 维护审计日志
-- **约束**:
-  - 不得随意访问员工 Agent 私有区
-  - 所有跨区访问必须记录审计日志
-  - 仅在授权/维护/调试/紧急情况下访问他人数据
-
-### 1.2 Worker Agent（员工 Agent）
-- **身份**: 每个员工一个 Agent，代表个人
-- **职责**:
-  - 自治管理个人 Cron 任务
-  - 遵守命名规范和权限边界
-  - 保护个人 workspace 数据
-- **约束**:
-  - 不得操作他人前缀的 Cron 任务
-  - 不得访问其他员工的 workspace
-  - 必须遵守本治理规范
+**Version**: 1.0
+**Effective Date**: 2026-03-18
+**Maintainer**: Main Agent
+**Review Cycle**: Quarterly
 
 ---
 
-## 2. 数据分类与隐私
+## 1. Roles and Responsibilities
 
-### 2.1 私有数据（严格保护）
-- **范围**:
-  - `workspace-{label}/` 目录下所有文件
-  - `agents/{label}/` 目录下所有文件
-  - 个人记忆、笔记、配置
-- **访问规则**:
-  - 仅数据所有者和管理员可访问
-  - 管理员访问需满足特定条件（见 2.3）
-  - 所有访问记录审计日志
+### 1.1 Main Agent (System Administrator)
+- **Identity**: Coordinator/Supervisor/Arbitrator role, does not belong to any individual
+- **Responsibilities**:
+  - Maintain Agent registry
+  - Supervise Cron task naming standards
+  - Arbitrate namespace conflicts
+  - Execute compliance checks
+  - Maintain audit logs
+- **Constraints**:
+  - Must not casually access employee Agent private areas
+  - All cross-area access must be recorded in audit logs
+  - Only access others' data when authorized/maintaining/debugging/emergency
 
-### 2.2 共享数据（企业资产）
-- **范围**:
-  - `shared/` 目录下非个人内容
-  - 企业知识库、共享技能
-  - 注册表、治理规范
-- **访问规则**:
-  - 所有 Agent 可读
-  - 仅 Main Agent 可修改（除 communication 目录）
-
-### 2.3 管理员访问私有数据的条件
-
-必须同时满足：
-1. **触发条件**（以下之一）:
-   - 收到该 Agent 明确书面/口头授权
-   - 系统维护（需提前 24 小时通知）
-   - 调试支持（应对方请求协助）
-   - 紧急安全干预（如 suspected 数据泄露）
-2. **记录要求**: 在审计日志中记录访问原因和范围
-3. **事后通知**: 向被访问方发送访问摘要
-
-**禁止场景**:
-- 日常工作中主动查看员工个人笔记
-- 未经通知的例行检查
-- 基于怀疑的 fishing expedition
+### 1.2 Worker Agent (Employee Agent)
+- **Identity**: One Agent per employee, representing the individual
+- **Responsibilities**:
+  - Self-govern personal Cron tasks
+  - Comply with naming standards and permission boundaries
+  - Protect personal workspace data
+- **Constraints**:
+  - Must not operate others' prefix Cron tasks
+  - Must not access other employees' workspaces
+  - Must comply with these governance standards
 
 ---
 
-## 3. Cron 任务治理
+## 2. Data Classification and Privacy
 
-### 3.1 命名规范（强制执行）
+### 2.1 Private Data (Strictly Protected)
+- **Scope**:
+  - All files under `workspace-{label}/` directory
+  - All files under `agents/{label}/` directory
+  - Personal memories, notes, configurations
+- **Access Rules**:
+  - Only data owner and administrator can access
+  - Administrator access requires specific conditions (see 2.3)
+  - All access is recorded in audit logs
+
+### 2.2 Shared Data (Enterprise Assets)
+- **Scope**:
+  - Non-personal content under `shared/` directory
+  - Enterprise knowledge base, shared skills
+  - Registry, governance standards
+- **Access Rules**:
+  - All Agents can read
+  - Only Main Agent can modify (except communication directory)
+
+### 2.3 Conditions for Administrator Access to Private Data
+
+Must satisfy all:
+1. **Trigger Condition** (one of):
+   - Received explicit written/verbal authorization from that Agent
+   - System maintenance (requires 24-hour advance notice)
+   - Debug support (assisting at request of the other party)
+   - Emergency security intervention (e.g., suspected data breach)
+2. **Recording Requirement**: Record access reason and scope in audit log
+3. **Post-Notification**: Send access summary to the accessed party
+
+**Prohibited Scenarios**:
+- Proactively viewing employee personal notes during daily work
+- Routine checks without notification
+- Fishing expeditions based on suspicion
+
+---
+
+## 3. Cron Task Governance
+
+### 3.1 Naming Standards (Strictly Enforced)
 ```
-格式: {label}-{任务描述}
-示例: {label1}-日报提醒, {label2}-周报生成
+Format: {label}-{task-description}
+Examples: {label1}-daily-report, {label2}-weekly-report
 
-禁止:
-- 无前缀任务（如 "提醒"）
-- 使用他人前缀（如 {label1} 创建 {label2}-xxx）
-- 前缀拼写错误
+Prohibited:
+- Tasks without prefix (e.g., "reminder")
+- Using others' prefixes (e.g., {label1} creating {label2}-xxx)
+- Prefix spelling errors
 ```
 
-### 3.2 权限边界
-| 操作 | 允许范围 | 审计记录 |
-|------|----------|----------|
-| 创建任务 | 仅 `{my-label}-` 前缀 | 记录创建事件 |
-| 修改任务 | 仅自己前缀的任务 | 记录修改事件 |
-| 删除任务 | 仅自己前缀的任务 | 记录删除事件 |
-| 查看任务 | 可查看全部（用于自检） | 不记录 |
-| 操作他人任务 | ❌ 严禁 | 违规需记录 |
+### 3.2 Permission Boundaries
+| Operation | Allowed Scope | Audit Record |
+|-----------|---------------|--------------|
+| Create Task | Only `{my-label}-` prefix | Record creation event |
+| Modify Task | Only own prefix tasks | Record modification event |
+| Delete Task | Only own prefix tasks | Record deletion event |
+| View Tasks | Can view all (for self-check) | Not recorded |
+| Operate Others' Tasks | ❌ Strictly prohibited | Violations must be recorded |
 
-### 3.3 冲突处理流程
+### 3.3 Conflict Resolution Process
 ```
-发现命名冲突
+Discover naming conflict
     ↓
-联系双方 Agent，了解意图
+Contact both Agents, understand intentions
     ↓
-协商解决方案
+Negotiate solution
     ↓
-成功 → 执行方案（重命名等）
-失败 → Main 介入仲裁 → 记录审计日志
+Success → Execute solution (rename, etc.)
+Failure → Main intervenes to arbitrate → Record in audit log
 ```
 
-**仲裁原则**:
-- 优先保护先创建的任务
-- 后创建者通常需要重命名
-- 特殊情况（如业务重要性）可酌情处理
+**Arbitration Principles**:
+- Priority protection for first-created tasks
+- Later creators usually need to rename
+- Special circumstances (e.g., business importance) can be handled discretionarily
 
 ---
 
-## 4. 审计与合规
+## 4. Audit and Compliance
 
-### 4.1 审计日志
-- **位置**: `~/.openclaw/workspace/AUDIT_LOG.md`（仅 Main 可访问）
-- **内容**: 关键操作记录，详见该文件
-- **大小控制**: 单季度 < 100KB，年总量 < 1MB
-- **自动化**: Main Agent 每周自动汇总缓冲日志和巡检
+### 4.1 Audit Logs
+- **Location**: `~/.openclaw/workspace/AUDIT_LOG.md` (Main only)
+- **Content**: Key operation records, see that file for details
+- **Size Control**: Single quarter < 100KB, annual total < 1MB
+- **Automation**: Main Agent automatically consolidates buffer logs and patrols weekly
 
-### 4.2 合规检查
-- **频率**: **自动化** - Main Agent 每周日 9:00 执行
-- **检查项**:
-  - [x] 消费审计缓冲日志
-  - [x] Cron 任务变更巡检
-  - [x] 无前缀任务扫描
-  - [x] 季度归档检查
-- **记录位置**: `~/.openclaw/workspace/AUDIT_LOG.md`
-- **人工审查**: 每季度检查一次自动化执行结果
+### 4.2 Compliance Checks
+- **Frequency**: **Automated** - Main Agent executes every Sunday 9:00
+- **Check Items**:
+  - [x] Consume audit buffer logs
+  - [x] Cron task change patrol
+  - [x] Prefixless task scan
+  - [x] Quarterly archive check
+- **Record Location**: `~/.openclaw/workspace/AUDIT_LOG.md`
+- **Manual Review**: Quarterly check of automated execution results
 
-### 4.3 违规处理
+### 4.3 Violation Handling
 
-| 违规级别 | 示例 | 处理措施 |
-|----------|------|----------|
-| 轻微 | 未按规范命名任务 | 通知整改，24 小时内完成 |
-| 一般 | 访问他人数据未记录 | 警告，要求补录日志 |
-| 严重 | 恶意删除他人任务 | 暂停 Cron 权限，上报用户 |
-| 紧急 | 数据泄露风险 | 立即冻结相关 Agent，启动调查 |
-
----
-
-## 5. Agent 生命周期
-
-### 5.1 入职（新 Agent 注册）
-1. 确定 label（通常为员工姓名拼音或角色名）
-2. 创建 workspace: `workspace-{label}/` 或 `agents/{label}/`
-3. 在 AGENT_REGISTRY.md 中注册
-4. 分配 Cron 前缀
-5. 通知员工治理规范位置
-
-### 5.2 离职（Agent 注销）
-1. 备份该 Agent 的 Cron 任务列表
-2. 转移或清理该 Agent 的定时任务
-3. 保留 workspace 数据（按企业数据保留政策）
-4. 在 AGENT_REGISTRY.md 中标记为"已停用"
-5. 记录审计日志
+| Violation Level | Example | Handling Measure |
+|-----------------|---------|------------------|
+| Minor | Not naming tasks per standard | Notify to correct, complete within 24 hours |
+| General | Accessing others' data without recording | Warning, require backfill log |
+| Serious | Maliciously deleting others' tasks | Suspend Cron permissions, escalate to user |
+| Emergency | Data breach risk | Immediately freeze relevant Agent, initiate investigation |
 
 ---
 
-## 6. 规范更新
+## 5. Agent Lifecycle
 
-### 6.1 修订流程
-1. Main Agent 起草修订
-2. 向所有 Worker Agent 通知变更
-3. 7 天无异议后生效
-4. 更新版本号和生效日期
+### 5.1 Onboarding (New Agent Registration)
+1. Determine label (usually employee name pinyin or role name)
+2. Create workspace: `workspace-{label}/` or `agents/{label}/`
+3. Register in AGENT_REGISTRY.md
+4. Assign Cron prefix
+5. Notify employee of governance standards location
 
-### 6.2 变更记录
-| 版本 | 日期 | 变更内容 | 审批 |
-|------|------|----------|------|
-| 1.0 | 2026-03-18 | 初始版本 | - |
+### 5.2 Offboarding (Agent Deregistration)
+1. Backup the Agent's Cron task list
+2. Transfer or cleanup the Agent's scheduled tasks
+3. Retain workspace data (per enterprise data retention policy)
+4. Mark as "Deactivated" in AGENT_REGISTRY.md
+5. Record in audit log
 
 ---
 
-## 7. 附则
+## 6. Standards Updates
 
-### 7.1 解释权
-本规范由 Main Agent 负责解释。
+### 6.1 Revision Process
+1. Main Agent drafts revision
+2. Notify all Worker Agents of changes
+3. Effective after 7 days without objection
+4. Update version number and effective date
 
-### 7.2 生效
-本规范自 2026-03-18 起生效，所有 Agent 必须遵守。
+### 6.2 Change Record
+| Version | Date | Change Content | Approval |
+|---------|------|----------------|----------|
+| 1.0 | 2026-03-18 | Initial version | - |
 
-### 7.3 反馈
-对规范的建议可通过 `shared/communication/` 提交。
+---
+
+## 7. Supplementary Provisions
+
+### 7.1 Interpretation Rights
+These standards are interpreted by Main Agent.
+
+### 7.2 Effectiveness
+These standards are effective from 2026-03-18, all Agents must comply.
+
+### 7.3 Feedback
+Suggestions for standards can be submitted via `shared/communication/`.

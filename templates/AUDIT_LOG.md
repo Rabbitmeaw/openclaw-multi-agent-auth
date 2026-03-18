@@ -1,38 +1,38 @@
-# 审计日志
+# Audit Log
 
-**位置**: `~/.openclaw/workspace/AUDIT_LOG.md` (仅 Main Agent 可访问)
-**用途**: 记录关键操作，用于合规审查和问题追溯
-**更新原则**: 仅记录变更操作，不记录正常读取
-
----
-
-## 日志规范
-
-### 记录范围
-| 操作类型 | 是否记录 | 说明 |
-|----------|----------|------|
-| Cron 任务创建 | ✅ 记录 | 谁创建了哪个任务 |
-| Cron 任务修改 | ✅ 记录 | 谁修改了哪个任务，变更摘要 |
-| Cron 任务删除 | ✅ 记录 | 谁删除了哪个任务 |
-| 跨 Agent 访问 | ✅ 记录 | 谁访问了谁的 workspace，原因 |
-| 注册表变更 | ✅ 记录 | 谁修改了 AGENT_REGISTRY |
-| 合规检查 | ✅ 记录 | 检查结果摘要 |
-| 正常读取 | ❌ 不记录 | 如查看自己的任务列表 |
-| 自己 workspace 操作 | ❌ 不记录 | 个人文件操作不记录 |
-
-### 格式规范
-```
-[YYYY-MM-DD HH:MM] [ACTION] [AGENT] 详情
-```
-
-### 归档策略
-- **活跃日志**: 当前季度，保留在本文件
-- **历史日志**: 上季度自动归档到 `~/.openclaw/archive/YYYY-Qx/`
-- **保留期限**: 4 个季度（1 年），超期可清理
+**Location**: `~/.openclaw/workspace/AUDIT_LOG.md` (Main Agent only)
+**Purpose**: Record key operations for compliance review and issue tracing
+**Update Principle**: Only record change operations, not normal reads
 
 ---
 
-## 日志条目
+## Log Standards
+
+### Recording Scope
+| Operation Type | Record? | Description |
+|----------------|---------|-------------|
+| Cron Task Creation | ✅ Record | Who created which task |
+| Cron Task Modification | ✅ Record | Who modified which task, change summary |
+| Cron Task Deletion | ✅ Record | Who deleted which task |
+| Cross-Agent Access | ✅ Record | Who accessed whose workspace, reason |
+| Registry Change | ✅ Record | Who modified AGENT_REGISTRY |
+| Compliance Check | ✅ Record | Check result summary |
+| Normal Read | ❌ Not recorded | E.g., viewing own task list |
+| Own Workspace Operation | ❌ Not recorded | Personal file operations |
+
+### Format Standard
+```
+[YYYY-MM-DD HH:MM] [ACTION] [AGENT] Details
+```
+
+### Archive Strategy
+- **Active Log**: Current quarter, retained in this file
+- **Historical Logs**: Last quarter automatically archived to `~/.openclaw/archive/YYYY-Qx/`
+- **Retention Period**: 4 quarters (1 year), can cleanup after expiration
+
+---
+
+## Log Entries
 
 ### 2026-Q1
 

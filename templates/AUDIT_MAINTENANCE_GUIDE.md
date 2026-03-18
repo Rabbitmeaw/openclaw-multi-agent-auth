@@ -1,170 +1,170 @@
-# 审计维护操作手册
+# Audit Maintenance Operation Manual
 
-**任务名称**: main-审计维护
-**执行频率**: 每周日 9:00
-**触发方式**: Cron 定时任务
-
----
-
-## 维护目标
-
-1. 收集各 Agent 的审计日志
-2. 检查 Cron 任务变更
-3. 验证权限合规性
-4. 生成维护报告
+**Task Name**: main-audit-maintenance
+**Execution Frequency**: Every Sunday 9:00
+**Trigger Method**: Cron scheduled task
 
 ---
 
-## 执行步骤
+## Maintenance Objectives
 
-### 步骤 1: 收集审计缓冲
+1. Collect audit logs from all Agents
+2. Check Cron task changes
+3. Verify permission compliance
+4. Generate maintenance report
 
-读取各 Agent 写入的审计记录：
+---
+
+## Execution Steps
+
+### Step 1: Collect Audit Buffer
+
+Read audit records written by each Agent:
 
 ```bash
-# 检查是否存在 AUDIT_BUFFER.md
+# Check if AUDIT_BUFFER.md exists
 if [ -f ~/.openclaw/shared/AUDIT_BUFFER.md ]; then
     cat ~/.openclaw/shared/AUDIT_BUFFER.md
 else
-    echo "暂无新的审计记录"
+    echo "No new audit records"
 fi
 ```
 
-**收集内容**:
-- 各 Agent 报告的 Cron 操作
-- 异常操作记录
-- 命名空间冲突记录
+**Collection Content**:
+- Cron operations reported by each Agent
+- Abnormal operation records
+- Namespace conflict records
 
-### 步骤 2: 汇总到审计日志
+### Step 2: Consolidate to Audit Log
 
-将收集到的信息追加到主审计日志：
+Append collected information to main audit log:
 
 ```
 ~/.openclaw/workspace/AUDIT_LOG.md
 ```
 
-**记录格式**:
+**Record Format**:
 ```markdown
-## 审计记录 - 2026-03-18
+## Audit Record - 2026-03-18
 
-### 时间范围
-上周日至本周六
+### Time Range
+Last Sunday to This Saturday
 
-### 收集的审计项
-- [条目1]
-- [条目2]
+### Collected Audit Items
+- [Item 1]
+- [Item 2]
 
-### Cron 任务变更
-- 新增: [任务名]
-- 修改: [任务名]
-- 删除: [任务名]
+### Cron Task Changes
+- New: [Task name]
+- Modified: [Task name]
+- Deleted: [Task name]
 
-### 异常事项
-- [异常描述]
+### Abnormal Items
+- [Abnormal description]
 
-### 处理措施
-- [采取的措施]
+### Handling Measures
+- [Measures taken]
 ```
 
-### 步骤 3: 检查 Cron 任务变更
+### Step 3: Check Cron Task Changes
 
-1. **获取当前任务列表**:
+1. **Get Current Task List**:
    ```bash
    openclaw cron list
    ```
 
-2. **对比上周快照**:
-   - 读取 `~/.openclaw/workspace/.cron_snapshot.json`
-   - 对比差异：新增、修改、删除的任务
+2. **Compare with Last Week's Snapshot**:
+   - Read `~/.openclaw/workspace/.cron_snapshot.json`
+   - Compare differences: new, modified, deleted tasks
 
-3. **检查命名规范**:
-   - 验证所有任务是否带有正确的前缀
-   - 违规格式：`无前缀-任务名`、`错误前缀-任务名`
+3. **Check Naming Standards**:
+   - Verify all tasks have correct prefixes
+   - Violation formats: `no-prefix-task`, `wrong-prefix-task`
 
-4. **保存本周快照**:
+4. **Save This Week's Snapshot**:
    ```bash
    openclaw cron list > ~/.openclaw/workspace/.cron_snapshot.json
    ```
 
-### 步骤 4: 检查季度归档
+### Step 4: Check Quarterly Archive
 
-1. **检查归档目录**:
+1. **Check Archive Directory**:
    ```
    ~/.openclaw/archive/
-   └── 2026-Q1/          # 当前季度
+   └── 2026-Q1/          # Current quarter
        ├── audit-logs/
        ├── cron-snapshots/
        └── agent-reports/
    ```
 
-2. **归档条件判断**:
-   - 如果是季度最后一周，执行归档
-   - 将本季度审计日志移动到归档目录
+2. **Archive Condition Judgment**:
+   - If it's the last week of quarter, execute archive
+   - Move this quarter's audit logs to archive directory
 
-3. **创建新季度目录**（如果是新季度第一周）:
+3. **Create New Quarter Directory** (if first week of new quarter):
    ```
    ~/.openclaw/archive/2026-Q2/
    ```
 
-### 步骤 5: 生成并发送报告
+### Step 5: Generate and Send Report
 
-**报告内容**:
+**Report Content**:
 ```
-🔍 审计维护报告 - [日期]
+🔍 Audit Maintenance Report - [Date]
 
-📊 Cron 任务统计:
-- 总任务数: [数量]
-- 本周新增: [数量]
-- 本周修改: [数量]
-- 命名规范违规: [数量]
+📊 Cron Task Statistics:
+- Total tasks: [Count]
+- New this week: [Count]
+- Modified this week: [Count]
+- Naming standard violations: [Count]
 
-📋 审计事项:
-- 收集记录: [数量] 条
-- 待处理: [数量] 条
-- 已处理: [数量] 条
+📋 Audit Items:
+- Records collected: [Count]
+- Pending: [Count]
+- Processed: [Count]
 
-✅ 维护状态: 正常 / 需关注
+✅ Maintenance Status: Normal / Attention Needed
 
-📁 季度归档: [进度]
+📁 Quarterly Archive: [Progress]
 ```
 
-**发送方式**:
-使用 `message` 工具发送到指定渠道
+**Send Method**:
+Use `message` tool to send to specified channel
 
 ---
 
-## 快速检查清单
+## Quick Checklist
 
-- [ ] AUDIT_BUFFER.md 已读取
-- [ ] AUDIT_LOG.md 已更新
-- [ ] Cron 列表已对比
-- [ ] 命名规范已检查
-- [ ] 季度归档已检查
-- [ ] 报告已生成并发送
-
----
-
-## 异常处理
-
-| 异常情况 | 处理措施 |
-|----------|----------|
-| AUDIT_BUFFER.md 不存在 | 记录"暂无新审计记录"，继续执行 |
-| 发现命名规范违规 | 记录违规任务，通知相关 Agent |
-| 发现权限争议 | 记录详情，准备仲裁 |
-| 归档目录权限错误 | 检查文件权限，必要时手动修复 |
+- [ ] AUDIT_BUFFER.md has been read
+- [ ] AUDIT_LOG.md has been updated
+- [ ] Cron list has been compared
+- [ ] Naming standards have been checked
+- [ ] Quarterly archive has been checked
+- [ ] Report has been generated and sent
 
 ---
 
-## 相关文件
+## Exception Handling
 
-| 文件 | 路径 | 说明 |
-|------|------|------|
-| 审计缓冲 | `~/.openclaw/shared/AUDIT_BUFFER.md` | 各 Agent 写入的审计记录 |
-| 审计日志 | `~/.openclaw/workspace/AUDIT_LOG.md` | 汇总的主审计日志 |
-| 上周快照 | `~/.openclaw/workspace/.cron_snapshot.json` | Cron 任务上周状态 |
-| 本指南 | `~/.openclaw/workspace/AUDIT_MAINTENANCE_GUIDE.md` | 本文件 |
+| Exception | Handling Measure |
+|-----------|------------------|
+| AUDIT_BUFFER.md doesn't exist | Record "No new audit records", continue execution |
+| Naming standard violation found | Record violation task, notify relevant Agent |
+| Permission dispute found | Record details, prepare for arbitration |
+| Archive directory permission error | Check file permissions, fix manually if necessary |
 
 ---
 
-**最后更新**: 2026-03-18
-**版本**: 1.0
+## Related Files
+
+| File | Path | Description |
+|------|------|-------------|
+| Audit Buffer | `~/.openclaw/shared/AUDIT_BUFFER.md` | Audit records written by each Agent |
+| Audit Log | `~/.openclaw/workspace/AUDIT_LOG.md` | Consolidated main audit log |
+| Last Week's Snapshot | `~/.openclaw/workspace/.cron_snapshot.json` | Cron task last week status |
+| This Guide | `~/.openclaw/workspace/AUDIT_MAINTENANCE_GUIDE.md` | This file |
+
+---
+
+**Last Updated**: 2026-03-18
+**Version**: 1.0
