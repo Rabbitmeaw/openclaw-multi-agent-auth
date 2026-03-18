@@ -93,8 +93,8 @@ openclaw gateway restart
 # 1. 克隆本仓库到 OpenClaw 配置目录
 cd ~/.openclaw
 
-# 2. 复制模板文件
-cp -r /path/to/this/repo/templates/* ./
+# 2. 复制模板文件（中文版本使用 templates-zh/）
+cp -r /path/to/this/repo/templates-zh/* ./
 
 # 3. 编辑注册表，配置你的 Agent
 vim shared/AGENT_REGISTRY.md
@@ -103,15 +103,15 @@ vim shared/AGENT_REGISTRY.md
 openclaw gateway restart
 ```
 
-### 文档索引
+### 中文文档索引
 
 | 文档 | 内容 |
 |------|------|
-| [docs/goal.md](docs/goal.md) | 设计目标与核心原则 |
-| [docs/organizations.md](docs/organizations.md) | 适用组织类型与场景分析 |
-| [docs/architecture.md](docs/architecture.md) | 整体权限结构与架构设计 |
-| [docs/setup.md](docs/setup.md) | 详细设置方案与执行步骤 |
-| [docs/usage.md](docs/usage.md) | 日常使用指南与故障排查 |
+| [docs-zh/goal.md](docs-zh/goal.md) | 设计目标与核心原则 |
+| [docs-zh/organizations.md](docs-zh/organizations.md) | 适用组织类型与场景分析 |
+| [docs-zh/architecture.md](docs-zh/architecture.md) | 整体权限结构与架构设计 |
+| [docs-zh/setup.md](docs-zh/setup.md) | 详细设置方案与执行步骤 |
+| [docs-zh/usage.md](docs-zh/usage.md) | 日常使用指南与故障排查 |
 
 ---
 
@@ -119,29 +119,48 @@ openclaw gateway restart
 
 ```
 openclaw-multi-agent-auth/
-├── README.md                 # This file / 本文件
-├── LICENSE                   # MIT License
-├── SECURITY.md              # Security policy / 安全政策
-├── CONTRIBUTING.md          # Contribution guidelines / 贡献指南
-├── CHANGELOG.md             # Changelog / 更新日志
-├── SECURITY_AUDIT_REPORT.md # Audit report / 安全性审计报告
-├── docs/                     # Documentation / 文档目录
-│   ├── goal.md              # Design goals / 设计目标
-│   ├── organizations.md     # Organization types / 适用组织
-│   ├── architecture.md      # Architecture / 架构设计
-│   ├── setup.md             # Setup guide / 设置方案
-│   └── usage.md             # Usage guide / 使用指南
-├── templates/               # Templates / 模板目录
-│   ├── AGENT_REGISTRY.md    # Agent registry / Agent 注册表
-│   ├── AGENT_CONSTRAINTS.md # Permission constraints / 权限约束
-│   ├── GOVERNANCE.md        # Governance standards / 治理规范
-│   ├── AUDIT_BUFFER.md      # Audit buffer / 审计缓冲
-│   ├── AUDIT_LOG.md         # Audit log / 审计日志
-│   ├── COMPLIANCE_CHECKLIST.md # Compliance checklist / 合规检查清单
-│   └── AUDIT_MAINTENANCE_GUIDE.md # Maintenance guide / 维护手册
-└── examples/                # Examples / 示例配置
-    ├── personal-3-agents/   # Personal example / 个人示例
-    └── enterprise-10-agents/ # Enterprise example / 企业示例
+├── README.md                    # This file / 本文件
+├── LICENSE                      # MIT License
+├── SECURITY.md                  # Security policy / 安全政策
+├── CONTRIBUTING.md              # Contribution guidelines / 贡献指南
+├── CHANGELOG.md                 # Changelog / 更新日志
+├── SECURITY_AUDIT_REPORT.md     # Audit report / 安全性审计报告
+├── docs/                        # English Documentation / 英文文档
+│   ├── goal.md
+│   ├── organizations.md
+│   ├── architecture.md
+│   ├── setup.md
+│   └── usage.md
+├── docs-zh/                     # 中文文档
+│   ├── goal.md                 # 设计目标
+│   ├── organizations.md        # 适用组织
+│   ├── architecture.md         # 架构设计
+│   ├── setup.md                # 设置方案
+│   └── usage.md                # 使用指南
+├── templates/                   # English Templates / 英文模板
+│   ├── AGENT_REGISTRY.md
+│   ├── AGENT_CONSTRAINTS.md
+│   ├── GOVERNANCE.md
+│   ├── AUDIT_BUFFER.md
+│   ├── AUDIT_LOG.md
+│   ├── COMPLIANCE_CHECKLIST.md
+│   ├── AUDIT_MAINTENANCE_GUIDE.md
+│   └── SOUL_WORKER.md
+├── templates-zh/                # 中文模板
+│   ├── AGENT_REGISTRY.md       # Agent 注册表模板
+│   ├── AGENT_CONSTRAINTS.md    # 权限约束模板
+│   ├── GOVERNANCE.md           # 治理规范模板
+│   ├── AUDIT_BUFFER.md         # 审计缓冲模板
+│   ├── AUDIT_LOG.md            # 审计日志模板
+│   ├── COMPLIANCE_CHECKLIST.md # 合规检查模板
+│   ├── AUDIT_MAINTENANCE_GUIDE.md # 维护手册模板
+│   └── SOUL_WORKER.md          # Worker SOUL 模板
+├── examples/                    # English Examples / 英文示例
+│   ├── personal-3-agents/
+│   └── enterprise-10-agents/
+└── examples-zh/                 # 中文示例
+    ├── personal-3-agents/      # 个人3 Agent示例
+    └── enterprise-10-agents/   # 企业10 Agent示例
 ```
 
 ---
@@ -170,7 +189,7 @@ openclaw-multi-agent-auth/
 
 ## License / 许可证
 
-MIT License - See [LICENSE](LICENSE) file
+MIT License - See [LICENSE](LICENSE) file / 详见 [LICENSE](LICENSE) 文件
 
 ---
 
@@ -178,7 +197,7 @@ MIT License - See [LICENSE](LICENSE) file
 
 Issues and PRs are welcome! / 欢迎提交 Issue 和 PR！
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details. / 详见 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
