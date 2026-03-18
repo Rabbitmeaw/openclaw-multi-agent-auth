@@ -1,13 +1,21 @@
-# OpenClaw Multi-Agent Auth
+# OpenClaw Multi-Agent Auth / OpenClaw 单网关多 Agent 权限治理方案
+
+<div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Compatible-blue.svg)](https://openclaw.dev)
 
-> A permission isolation and collaborative governance solution for multi-Agent environments on OpenClaw single gateway
+**English** | [中文](#中文文档)
+
+</div>
 
 ---
 
-## ⚠️ Security Notice
+## English
+
+> A permission isolation and collaborative governance solution for multi-Agent environments on OpenClaw single gateway
+
+### ⚠️ Security Notice
 
 **This solution adopts a "soft isolation" design. Please be aware of the following limitations:**
 
@@ -17,9 +25,7 @@
 
 For hard security guarantees, please use systems with mandatory access controls. See [SECURITY.md](SECURITY.md) for details.
 
----
-
-## Overview
+### Overview
 
 When running multiple Agents in an OpenClaw single-gateway environment, how do you ensure:
 - 🔒 **Data Isolation**: Each Agent's private data remains inaccessible to others
@@ -29,34 +35,10 @@ When running multiple Agents in an OpenClaw single-gateway environment, how do y
 
 This solution provides a complete governance framework from physical isolation to application-layer governance.
 
----
-
-## Core Features
-
-| Feature | Description |
-|---------|-------------|
-| **Physical Isolation** | Directory-level workspace isolation with independent storage for each Agent |
-| **Namespace Isolation** | Cron tasks distinguished via `{label}-` prefix |
-| **Soft Permission Constraints** | Self-discipline mechanism based on prompts, no hard ACL required |
-| **Audit Trail** | Automated audit log collection and archiving |
-| **Supervision & Arbitration** | Main Agent responsible for conflict coordination and emergency intervention |
-| **Lightweight Implementation** | Zero additional dependencies, pure filesystem solution |
-
----
-
-## Use Cases
-
-- 👤 **Personal Multi-Agent Assistants**: Isolation of Agents for different roles (work, study, life)
-- 🏢 **Small Teams (3-50 people)**: Each member has one Agent, sharing gateway resources
-- 🏭 **Enterprise Departments**: Agent groups divided by function requiring compliance auditing
-- 🤖 **AI Service Providers**: Multi-tenant scenarios with Agent isolation
-
----
-
-## Quick Start
+### Quick Start
 
 ```bash
-# 1. Clone this repository to your OpenClaw config directory
+# 1. Clone this repository
 cd ~/.openclaw
 
 # 2. Copy template files
@@ -69,99 +51,137 @@ vim shared/AGENT_REGISTRY.md
 openclaw gateway restart
 ```
 
-See [Setup Guide](docs/setup.md) for detailed steps.
+### Documentation
 
----
-
-## Documentation Index
-
-| Document | Content |
-|----------|---------|
+| Document | Description |
+|----------|-------------|
 | [docs/goal.md](docs/goal.md) | Design goals and core principles |
-| [docs/organizations.md](docs/organizations.md) | Applicable organization types and scenario analysis |
-| [docs/architecture.md](docs/architecture.md) | Overall permission structure and architecture design |
-| [docs/setup.md](docs/setup.md) | Detailed setup instructions |
-| [docs/usage.md](docs/usage.md) | Daily usage guide and troubleshooting |
+| [docs/organizations.md](docs/organizations.md) | Applicable organization types |
+| [docs/architecture.md](docs/architecture.md) | Architecture design |
+| [docs/setup.md](docs/setup.md) | Setup instructions |
+| [docs/usage.md](docs/usage.md) | Usage guide |
 
 ---
 
-## Project Structure
+## 中文文档
+
+> 一套面向个人和企业的 OpenClaw 单网关多 Agent 权限隔离与协作治理方案
+
+### ⚠️ 安全声明
+
+**本方案采用"软隔离"设计，请注意以下限制：**
+
+- 🔓 **无硬 ACL 强制** - 依赖 Agent 自律和提示词约束，技术上 Agent 可访问所有目录
+- 🤝 **基于信任模型** - 适用于信任环境，不适用于零信任/高合规场景
+- 🚫 **请勿用于** - 金融、军工、医疗等高安全要求场景
+
+如需硬安全保证，请使用具有强制访问控制的系统。详见 [SECURITY.md](SECURITY.md)。
+
+### 方案概述
+
+在 OpenClaw 单网关环境下运行多个 Agent 时，如何确保：
+- 🔒 **数据隔离**：各 Agent 的私有数据互不侵犯
+- 🤝 **协作能力**：必要的跨 Agent 通信与共享
+- 📊 **可审计性**：操作可追溯，责任可归属
+- ⚖️ **治理机制**：冲突有仲裁，违规有处理
+
+本方案提供从物理隔离到应用层治理的完整解决方案。
+
+### 快速开始
+
+```bash
+# 1. 克隆本仓库到 OpenClaw 配置目录
+cd ~/.openclaw
+
+# 2. 复制模板文件
+cp -r /path/to/this/repo/templates/* ./
+
+# 3. 编辑注册表，配置你的 Agent
+vim shared/AGENT_REGISTRY.md
+
+# 4. 启动 Gateway
+openclaw gateway restart
+```
+
+### 文档索引
+
+| 文档 | 内容 |
+|------|------|
+| [docs/goal.md](docs/goal.md) | 设计目标与核心原则 |
+| [docs/organizations.md](docs/organizations.md) | 适用组织类型与场景分析 |
+| [docs/architecture.md](docs/architecture.md) | 整体权限结构与架构设计 |
+| [docs/setup.md](docs/setup.md) | 详细设置方案与执行步骤 |
+| [docs/usage.md](docs/usage.md) | 日常使用指南与故障排查 |
+
+---
+
+## Project Structure / 项目结构
 
 ```
 openclaw-multi-agent-auth/
-├── README.md                 # This file
+├── README.md                 # This file / 本文件
 ├── LICENSE                   # MIT License
-├── SECURITY.md              # Security policy
-├── CONTRIBUTING.md          # Contribution guidelines
-├── CHANGELOG.md             # Changelog
-├── SECURITY_AUDIT_REPORT.md # Security audit report
-├── docs/                     # Documentation
-│   ├── goal.md              # Design goals
-│   ├── organizations.md     # Applicable organizations
-│   ├── architecture.md      # Architecture design
-│   ├── setup.md             # Setup instructions
-│   └── usage.md             # Usage guide
-├── templates/               # Ready-to-use templates
-│   ├── AGENT_REGISTRY.md    # Agent registry template
-│   ├── AGENT_CONSTRAINTS.md # Permission constraints template
-│   ├── GOVERNANCE.md        # Governance standards template
-│   ├── AUDIT_BUFFER.md      # Audit buffer template
-│   ├── AUDIT_LOG.md         # Audit log template
-│   ├── COMPLIANCE_CHECKLIST.md # Compliance checklist template
-│   └── AUDIT_MAINTENANCE_GUIDE.md # Maintenance guide template
-└── examples/                # Example configurations
-    ├── personal-3-agents/   # Personal 3-Agent example
-    └── enterprise-10-agents/ # Enterprise 10-Agent example
+├── SECURITY.md              # Security policy / 安全政策
+├── CONTRIBUTING.md          # Contribution guidelines / 贡献指南
+├── CHANGELOG.md             # Changelog / 更新日志
+├── SECURITY_AUDIT_REPORT.md # Audit report / 安全性审计报告
+├── docs/                     # Documentation / 文档目录
+│   ├── goal.md              # Design goals / 设计目标
+│   ├── organizations.md     # Organization types / 适用组织
+│   ├── architecture.md      # Architecture / 架构设计
+│   ├── setup.md             # Setup guide / 设置方案
+│   └── usage.md             # Usage guide / 使用指南
+├── templates/               # Templates / 模板目录
+│   ├── AGENT_REGISTRY.md    # Agent registry / Agent 注册表
+│   ├── AGENT_CONSTRAINTS.md # Permission constraints / 权限约束
+│   ├── GOVERNANCE.md        # Governance standards / 治理规范
+│   ├── AUDIT_BUFFER.md      # Audit buffer / 审计缓冲
+│   ├── AUDIT_LOG.md         # Audit log / 审计日志
+│   ├── COMPLIANCE_CHECKLIST.md # Compliance checklist / 合规检查清单
+│   └── AUDIT_MAINTENANCE_GUIDE.md # Maintenance guide / 维护手册
+└── examples/                # Examples / 示例配置
+    ├── personal-3-agents/   # Personal example / 个人示例
+    └── enterprise-10-agents/ # Enterprise example / 企业示例
 ```
 
 ---
 
-## Solution Comparison
+## Core Features / 核心特性
 
-| Dimension | This Solution | Hard ACL Solution | No Isolation |
-|-----------|---------------|-------------------|--------------|
-| Implementation Complexity | Low (files + prompts) | High (requires development) | Minimal |
-| Security | Medium (trust-based) | High (mandatory) | Low |
-| Flexibility | High | Medium | Very High |
-| Audit Capability | Yes | Yes | No |
-| Suitable Phase | MVP/Growth | Mature | Prototype |
-
----
-
-## Core Principles
-
-> **"Technical Capability ≠ Permission"**
-
-Even if the filesystem allows access to all directories, each Agent should respect the agreed permission boundaries. This is a trust-based governance model.
+| Feature / 特性 | Description / 说明 |
+|----------------|-------------------|
+| **Physical Isolation / 物理隔离** | Directory-level workspace isolation / 目录级 workspace 隔离 |
+| **Namespace Isolation / 命名空间隔离** | Cron tasks via `{label}-` prefix / Cron 任务通过前缀区分 |
+| **Soft Constraints / 软权限约束** | Prompt-based self-discipline / 基于提示词的自律机制 |
+| **Audit Trail / 审计追踪** | Automated log collection / 自动化审计日志收集 |
+| **Governance / 监督仲裁** | Main Agent arbitration / Main Agent 负责冲突协调 |
 
 ---
 
-## Security
+## Solution Comparison / 方案对比
 
-This project has passed a security audit. See [SECURITY_AUDIT_REPORT.md](SECURITY_AUDIT_REPORT.md) for details.
-
-**Security Rating**: Low risk, safe to use.
-
----
-
-## Contributing
-
-Issues and PRs are welcome!
-
-- Found a problem? Submit an Issue describing the scenario
-- Improving documentation? Submit a PR directly
-- Adding new templates? Please provide usage examples
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+| Dimension / 维度 | This Solution / 本方案 | Hard ACL / 硬 ACL | No Isolation / 无隔离 |
+|------------------|------------------------|-------------------|----------------------|
+| Complexity / 实现复杂度 | Low / 低 | High / 高 | Minimal / 极低 |
+| Security / 安全性 | Medium (Trust) / 中 | High / 高 | Low / 低 |
+| Flexibility / 灵活性 | High / 高 | Medium / 中 | Very High / 极高 |
 
 ---
 
-## License
+## License / 许可证
 
 MIT License - See [LICENSE](LICENSE) file
 
 ---
 
-## Acknowledgments
+## Contributing / 贡献
 
-This solution is based on best practices from the OpenClaw community. Thanks to all developers who participated in discussions and validation.
+Issues and PRs are welcome! / 欢迎提交 Issue 和 PR！
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+---
+
+## Acknowledgments / 致谢
+
+This solution is based on best practices from the OpenClaw community. / 本方案基于 OpenClaw 社区的最佳实践总结而成。
