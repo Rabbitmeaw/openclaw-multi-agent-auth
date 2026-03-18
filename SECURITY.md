@@ -1,107 +1,107 @@
-# 安全政策
+# Security Policy
 
-## 安全声明
+## Security Notice
 
-**⚠️ 重要提示**
+**⚠️ Important Notice**
 
-本方案采用**"软隔离"**设计：
+This solution adopts a **"Soft Isolation"** design:
 
-- 依赖 Agent 自律和提示词约束，**无硬 ACL 强制**
-- 适用于**信任环境**，不适用于零信任/高合规场景
-- **请勿用于**金融、军工、医疗等高安全要求场景
+- Relies on Agent self-discipline and prompt constraints, **no hard ACL enforcement**
+- Suitable for **trusted environments**, NOT for zero-trust/high-compliance scenarios
+- **DO NOT USE for** financial, military, medical, or other high-security requirement scenarios
 
-### 方案限制
+### Solution Limitations
 
-| 限制 | 说明 |
-|------|------|
-| 无强制访问控制 | Agent 技术上可访问所有目录，依赖自律 |
-| 基于信任模型 | 假设 Agent 会遵守提示词约束 |
-| 审计可绕过 | Worker Agent 可选择不上报审计日志 |
+| Limitation | Description |
+|------------|-------------|
+| No Mandatory Access Control | Agents can technically access all directories, relies on self-discipline |
+| Trust-Based Model | Assumes Agents will comply with prompt constraints |
+| Audit Can Be Bypassed | Worker Agents can choose not to report to audit logs |
 
-如需硬安全保证，请使用具有 ACL 支持的系统。
-
----
-
-## 报告安全问题
-
-如果你发现安全问题或漏洞：
-
-### 不要公开报告
-
-请不要通过公开的 GitHub Issues 报告安全问题。
-
-### 私下报告流程
-
-1. 发送邮件至: [待填写安全联系人邮箱]
-2. 邮件主题: `[Security] OpenClaw 安全问题报告`
-3. 包含内容:
-   - 问题描述
-   - 复现步骤（如适用）
-   - 潜在影响
-   - 建议修复方案（如有）
-
-### 响应流程
-
-| 时间 | 行动 |
-|------|------|
-| 24 小时内 | 确认收到报告 |
-| 72 小时内 | 初步评估 |
-| 7 天内 | 修复计划或说明 |
-| 修复后 | 公开致谢（如允许）|
+For hard security guarantees, please use systems with ACL support.
 
 ---
 
-## 已知限制
+## Reporting Security Issues
 
-本方案已知以下安全限制：
+If you discover security issues or vulnerabilities:
 
-### 1. 软隔离依赖自律
+### Do Not Report Publicly
 
-- **风险**: Agent 可技术上绕过约束
-- **缓解**: 仅部署于受信任环境
+Please do NOT report security issues via public GitHub Issues.
 
-### 2. 审计日志完整性
+### Private Reporting Process
 
-- **风险**: Worker 可能不上报操作
-- **缓解**: Main Agent 定期巡检发现异常
+1. Send email to: [Security contact email to be filled]
+2. Email subject: `[Security] OpenClaw Security Issue Report`
+3. Include:
+   - Issue description
+   - Reproduction steps (if applicable)
+   - Potential impact
+   - Suggested fix (if any)
 
-### 3. 无加密保护
+### Response Process
 
-- **风险**: 数据以明文存储
-- **缓解**: 确保文件系统本身安全
-
----
-
-## 安全最佳实践
-
-使用本方案时，建议采取以下措施：
-
-### 部署环境
-
-- [ ] 确保 OpenClaw 网关部署于安全环境
-- [ ] 限制对 `~/.openclaw/` 目录的文件系统访问
-- [ ] 定期备份审计日志
-
-### 使用规范
-
-- [ ] 定期检查 `AUDIT_LOG.md` 异常
-- [ ] 及时清理已停用 Agent 的数据
-- [ ] 限制 Main Agent 的访问范围
-
-### 监控建议
-
-- [ ] 设置审计日志文件变更告警
-- [ ] 定期检查 Cron 任务命名规范
-- [ ] 每季度审查 Agent 注册表
+| Time | Action |
+|------|--------|
+| Within 24 hours | Acknowledge receipt |
+| Within 72 hours | Initial assessment |
+| Within 7 days | Fix plan or explanation |
+| After fix | Public acknowledgment (if permitted) |
 
 ---
 
-## 版本历史
+## Known Limitations
 
-| 日期 | 变更 |
-|------|------|
-| 2026-03-18 | 初始安全政策 |
+This solution has the following known security limitations:
+
+### 1. Soft Isolation Relies on Self-Discipline
+
+- **Risk**: Agents can technically bypass constraints
+- **Mitigation**: Deploy only in trusted environments
+
+### 2. Audit Log Integrity
+
+- **Risk**: Workers may not report operations
+- **Mitigation**: Main Agent regular patrol discovers anomalies
+
+### 3. No Encryption Protection
+
+- **Risk**: Data stored in plaintext
+- **Mitigation**: Ensure filesystem itself is secure
 
 ---
 
-**最后更新**: 2026-03-18
+## Security Best Practices
+
+When using this solution, recommended measures:
+
+### Deployment Environment
+
+- [ ] Ensure OpenClaw gateway deployed in secure environment
+- [ ] Restrict filesystem access to `~/.openclaw/` directory
+- [ ] Regularly backup audit logs
+
+### Usage Standards
+
+- [ ] Regularly check `AUDIT_LOG.md` for anomalies
+- [ ] Promptly cleanup data for deactivated Agents
+- [ ] Restrict Main Agent access scope
+
+### Monitoring Recommendations
+
+- [ ] Set audit log file change alerts
+- [ ] Regularly check Cron task naming standards
+- [ ] Quarterly review Agent registry
+
+---
+
+## Version History
+
+| Date | Changes |
+|------|---------|
+| 2026-03-18 | Initial security policy |
+
+---
+
+**Last Updated**: 2026-03-18

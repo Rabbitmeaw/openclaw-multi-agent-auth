@@ -1,66 +1,65 @@
-# 更新日志
+# Changelog
 
-所有重要变更都会记录在此文件。
+All important changes are recorded in this file.
 
-格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), version numbers follow [Semantic Versioning](https://semver.org/).
 
 ---
 
 ## [Unreleased]
 
-### 计划中
+### Planned
 
-- [ ] 英文版文档
-- [ ] 更多企业场景示例
-- [ ] 自动化部署脚本
+- [ ] More enterprise scenario examples
+- [ ] Automated deployment scripts
 
 ---
 
 ## [1.0.0] - 2026-03-18
 
-### 新增
+### Added
 
-- 初始版本发布
-- 完整的权限治理方案文档
-- 7 个可直接使用的模板文件
-- 个人/企业场景示例
-- MIT 许可证
+- Initial version release
+- Complete permission governance solution documentation
+- 7 ready-to-use template files
+- Personal/enterprise scenario examples
+- MIT License
 
-### 文档
+### Documentation
 
-- `README.md` - 项目概述和快速开始
-- `docs/goal.md` - 设计目标与核心原则
-- `docs/organizations.md` - 适用组织类型分析
-- `docs/architecture.md` - 整体权限结构设计
-- `docs/setup.md` - 详细设置方案
-- `docs/usage.md` - 日常使用指南
+- `README.md` - Project overview and quick start
+- `docs/goal.md` - Design goals and core principles
+- `docs/organizations.md` - Applicable organization types analysis
+- `docs/architecture.md` - Overall permission structure design
+- `docs/setup.md` - Detailed setup instructions
+- `docs/usage.md` - Daily usage guide
 
-### 模板
+### Templates
 
-- `AGENT_REGISTRY.md` - Agent 注册表
-- `AGENT_CONSTRAINTS.md` - 权限约束定义
-- `GOVERNANCE.md` - 企业治理规范
-- `AUDIT_BUFFER.md` - 审计缓冲
-- `AUDIT_LOG.md` - 审计日志
-- `AUDIT_MAINTENANCE_GUIDE.md` - 维护手册
-- `COMPLIANCE_CHECKLIST.md` - 合规检查清单
-
----
-
-## 版本说明
-
-### 版本号规则
-
-- `主版本号` - 不兼容的架构变更
-- `次版本号` - 向下兼容的功能新增
-- `修订号` - 向下兼容的问题修复
-
-### 版本支持
-
-| 版本 | 状态 | 支持至 |
-|------|------|--------|
-| 1.0.x | 活跃开发 | 当前 |
+- `AGENT_REGISTRY.md` - Agent registry
+- `AGENT_CONSTRAINTS.md` - Permission constraints definition
+- `GOVERNANCE.md` - Enterprise governance standards
+- `AUDIT_BUFFER.md` - Audit buffer
+- `AUDIT_LOG.md` - Audit log
+- `AUDIT_MAINTENANCE_GUIDE.md` - Maintenance manual
+- `COMPLIANCE_CHECKLIST.md` - Compliance checklist
 
 ---
 
-**维护者**: OpenClaw Multi-Agent Auth Contributors
+## Version Notes
+
+### Version Number Rules
+
+- `Major` - Incompatible architecture changes
+- `Minor` - Backward-compatible feature additions
+- `Patch` - Backward-compatible bug fixes
+
+### Version Support
+
+| Version | Status | Supported Until |
+|---------|--------|-----------------|
+| 1.0.x | Active Development | Current |
+
+---
+
+**Maintainer**: OpenClaw Multi-Agent Auth Contributors

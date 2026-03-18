@@ -1,54 +1,54 @@
-# 个人 3 Agent 配置示例
+# Personal 3-Agent Configuration Example
 
-## 场景描述
+## Scenario Description
 
-个人用户，使用 3 个 Agent 分别处理不同领域：
-- **Main**: 协调者，拥有全局视图
-- **Work**: 工作助手，处理职业相关任务
-- **Life**: 生活助手，处理日常提醒和计划
+Personal user using 3 Agents for different domains:
+- **Main**: Coordinator with global view
+- **Work**: Work assistant handling career-related tasks
+- **Life**: Life assistant handling daily reminders and plans
 
-## 目录结构
+## Directory Structure
 
 ```
 ~/.openclaw/
 ├── workspace/                  # Main Agent
 ├── workspace-work/             # Work Agent
 ├── workspace-life/             # Life Agent
-└── shared/                     # 共享区
+└── shared/                     # Shared area
 ```
 
-## Agent 注册表配置
+## Agent Registry Configuration
 
 ```markdown
-| Label | 名称 | Cron 前缀 | 工作区路径 | 权限 |
-|-------|------|-----------|------------|------|
-| main | Main Agent | `main-` | `workspace/` | 全局管理 |
-| work | Work Agent | `work-` | `workspace-work/` | 自治 |
-| life | Life Agent | `life-` | `workspace-life/` | 自治 |
+| Label | Name | Cron Prefix | Workspace Path | Permissions |
+|-------|------|-------------|----------------|-------------|
+| main | Main Agent | `main-` | `workspace/` | Global Management |
+| work | Work Agent | `work-` | `workspace-work/` | Autonomous |
+| life | Life Agent | `life-` | `workspace-life/` | Autonomous |
 ```
 
-## 典型 Cron 任务
+## Typical Cron Tasks
 
 ### Work Agent
-- `work-日报提醒` - 每天 9:00 提醒写日报
-- `work-周报生成` - 每周五 17:00 生成周报草稿
-- `work-会议提醒` - 根据日历提前提醒
+- `work-daily-report` - Daily 9:00 reminder to write daily report
+- `work-weekly-report` - Every Friday 17:00 generate weekly report draft
+- `work-meeting-reminder` - Remind based on calendar
 
 ### Life Agent
-- `life-喝水提醒` - 每 2 小时提醒喝水
-- `life-运动计划` - 每周一、三、五 18:00 提醒运动
-- `life-账单提醒` - 每月 1 日提醒查看账单
+- `life-water-reminder` - Every 2 hours remind to drink water
+- `life-exercise-plan` - Every Mon/Wed/Fri 18:00 remind to exercise
+- `life-bill-reminder` - Monthly 1st remind to check bills
 
-## 审计配置
+## Audit Configuration
 
-- **频率**: 每月检查一次（个人使用可降低频率）
-- **归档**: 保留最近 2 季度
-- **报告**: 发送到自己的飞书/邮箱
+- **Frequency**: Monthly check (can reduce frequency for personal use)
+- **Archive**: Keep last 2 quarters
+- **Report**: Send to your Feishu/email
 
-## 设置步骤
+## Setup Steps
 
-1. 按照主文档 [setup.md](../../docs/setup.md) 执行基础设置
-2. 修改 `AGENT_REGISTRY.md`，使用上述 label 配置
-3. 为 work 和 life 分别创建工作区和 SOUL.md
-4. 创建审计维护任务
-5. 测试每个 Agent 的 Cron 创建功能
+1. Follow base setup in main document [setup.md](../../docs/setup.md)
+2. Modify `AGENT_REGISTRY.md` using above label configuration
+3. Create workspaces and SOUL.md for work and life respectively
+4. Create audit maintenance task
+5. Test Cron creation functionality for each Agent
